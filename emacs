@@ -73,15 +73,7 @@
 
 (use-package monokai-theme)
 
-;; Custom themes
-;; (add-to-list 'custom-theme-load-path "~/.emacs.d/themes/")
-
 ;;;;Org mode configuration
-;; Enable Org mode
-;;(require 'org)
-;;(setq org-todo-keywords
-;;      '(( sequence "TODO" "IN-PROGRESS" "WAITING" "DONE")))
-;; Make Org mode work with files ending in .org
 (use-package org
   :bind (("C-c l" . org-store-link)
          ("C-c a" . org-agenda)
@@ -95,6 +87,10 @@
      org-journal-file-format "%Y%m%d.org"))
 
   (require 'org-protocol)
+
+  (setq org-todo-keywords
+         (quote ((sequence "TODO(t)" "NEXT(n)" "|" "DONE(d)")
+                 (sequence "WAITING(w@/!)" "HOLD(h@/!)" "|" "CANCELLED(c@/!)" "PHONE" "MEETING"))))
 
   (add-to-list 'org-modules 'org-habit)
   (setq
@@ -111,19 +107,37 @@
    org-log-done 'time
    org-log-redeadline 'time
    org-log-reschedule 'time
-   org-capture-templates
-   '(("t" "Task" entry (file "~/org-files/inbox.org")
-      "* TODO %?\n  %U")
-     ("w" "Task" entry (file "~/org-files/inbox.org")
-      "* TODO %?\n  %U")
-     ("m" "Meeting now" entry (file+olp+datetree "~/org-files/meetings.org")
-      "* %? :meeting:\n  %T" :clock-in t :clock-keep t :jump-to-captured t :empty-lines 1 :tree-type week)
-     ("p" "" entry (file "~/org-files/inbox.org")
-      "* TODO %:description\n%U\n%:link\n\n#+BEGIN_QUOTE\n%:initial\n#+END_QUOTE" :immediate-finish t)
-     ("L" "Log" entry (file "~/org-files/inbox.org")
-      "* TODO %:description\n%U\n%:link" :immediate-finish t))))
+   )
 
+;; Make Org mode work with files ending in .org
 (add-to-list 'auto-mode-alist '("\\.org$" . org-mode))
+
+(defun bh/hide-other ()
+  (interactive)
+  (save-excursion
+    (org-back-to-heading 'invisible-ok)
+    (hide-other)
+    (org-cycle)
+    (org-cycle)
+    (org-cycle)))
+
+(defun bh/set-truncate-lines ()
+  "Toggle value of truncate-lines and refresh window display."
+  (interactive)
+  (setq truncate-lines (not truncate-lines))
+  ;; now refresh window display (an idiom from simple.el):
+  (save-excursion
+    (set-window-start (selected-window)
+                      (window-start (selected-window)))))
+
+(defun bh/make-org-scratch ()
+  (interactive)
+  (find-file "/tmp/publish/scratch.org")
+  (gnus-make-directory "/tmp/publish"))
+
+(defun bh/switch-to-scratch ()
+  (interactive)
+  (switch-to-buffer "*scratch*"))
 
 (use-package python
   :config
