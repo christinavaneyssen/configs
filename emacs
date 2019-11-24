@@ -100,12 +100,12 @@
   (interactive)
   (switch-to-buffer "*scratch*"))
 
-(use-package python
-  :config
-  (setq
-   python-shell-interpreter "python3"
-   python-shell-completion-native-enable nil)
-  (use-package blacken))
+;;(use-package python
+;;  :config
+;;  (setq
+;;   python-shell-interpreter "python3"
+;;   python-shell-completion-native-enable nil)
+;;  (use-package blacken))
 
 (use-package magit
   :bind (("C-x g" . magit-status)))
@@ -209,7 +209,6 @@
 (use-package direnv
  :config
  (direnv-mode))
-   )
 
 ;; Make Org mode work with files ending in .org
 (add-to-list 'auto-mode-alist '("\\.org$" . org-mode))
