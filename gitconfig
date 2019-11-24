@@ -1,0 +1,18 @@
+[alias]
+	co = checkout
+	br = branch
+	d = diff
+	a = add
+	st = status
+	commit = ci
+	ci = commit
+    fetch = fetch -p
+    hist = log --pretty=format:\"%h %ad | %s%d [%an]\" --graph --date=short
+    myclean = !git-clean
+[user]
+	name = "Name Surname"
+	email = "email@domain.com"
+[pager]
+	branch = false
+[core]
+	pager = less -+F -+X
