@@ -73,45 +73,6 @@
 
 (use-package monokai-theme)
 
-;;;;Org mode configuration
-(use-package org
-  :bind (("C-c l" . org-store-link)
-         ("C-c a" . org-agenda)
-         ("C-c c" . org-capture)
-         ("C-c C-x C-j" . org-clock-goto))
-  :config
-  (use-package org-journal
-    :config
-    (setq
-     org-journal-dir "~/org-files/journal/"
-     org-journal-file-format "%Y%m%d.org"))
-
-  (require 'org-protocol)
-
-  (setq org-todo-keywords
-         (quote ((sequence "TODO(t)" "NEXT(n)" "|" "DONE(d)")
-                 (sequence "WAITING(w@/!)" "HOLD(h@/!)" "|" "CANCELLED(c@/!)" "PHONE" "MEETING"))))
-
-  (add-to-list 'org-modules 'org-habit)
-  (setq
-   org-agenda-files '("~/org-files")
-   org-refile-targets '((("~/org-files/work.org" "~/org-files/todo.org") :maxlevel . 1))
-   org-deadline-warning-days 14
-   org-default-notes-file "~/org-files/todo.org"
-   org-reverse-note-order t
-   org-fast-tag-selection-single-key 'expert
-   org-use-fast-todo-selection t
-   org-export-backends '(ascii html icalendar md)
-   org-agenda-span 'day
-   org-enforce-todo-dependencies t
-   org-log-done 'time
-   org-log-redeadline 'time
-   org-log-reschedule 'time
-   )
-
-;; Make Org mode work with files ending in .org
-(add-to-list 'auto-mode-alist '("\\.org$" . org-mode))
-
 (defun bh/hide-other ()
   (interactive)
   (save-excursion
@@ -163,6 +124,8 @@
 ;; For visual wrapping at 80 columns when editing markdown.
 (use-package visual-fill-column)
 
+(setq-default word-wrap t)
+
 (use-package markdown-mode
   :ensure t
   :commands (markdown-mode gfm-mode)
@@ -176,10 +139,80 @@
     (setq word-wrap t))
   (add-hook 'gfm-mode-hook #'my-gfm-mode-hook))
 
+;;;;Org mode configuration
+(use-package org
+  :bind (("C-c l" . org-store-link)
+         ("C-c a" . org-agenda)
+         ("C-c c" . org-capture)
+         ("C-c C-x C-j" . org-clock-goto))
+  :config
 
+  (defun org-insert-inactive-time-stamp ()
+    "Insert an inactive time stamp."
+    (interactive)
+    (org-insert-time-stamp (current-time) t t))
+  (define-key org-mode-map (kbd "C-c .") 'org-insert-inactive-time-stamp)
 
+  (use-package org-journal
+    :config
+    (setq
+     org-journal-dir "~/org-files/journal/"
+     org-journal-file-format "%Y%m%d.org")))
 
+  (require 'org-protocol)
+  (require 'org-inlinetask)
 
+  (setq org-todo-keywords
+         (quote ((sequence "TODO(t)" "NEXT(n)" "|" "DONE(d)")
+                 (sequence "WAITING(w@/!)" "HOLD(h@/!)" "|" "CANCELLED(c@/!)" "PHONE" "MEETING"))))
+
+  (add-to-list 'org-modules 'org-habit)
+  (setq
+   org-agenda-files '("~/org-files")
+   org-refile-targets '((("~/org-files/work.org" "~/org-files/todo.org") :maxlevel . 1))
+   org-deadline-warning-days 14
+   org-default-notes-file "~/org-files/todo.org"
+   org-reverse-note-order t
+   org-fast-tag-selection-single-key 'expert
+   org-use-fast-todo-selection t
+   org-export-backends '(ascii html icalendar md)
+   org-agenda-span 'day
+   org-enforce-todo-dependencies t
+   org-log-done 'time
+   org-log-redeadline 'time
+   org-log-reschedule 'time
+   org-capture-templates
+   '(("c" "Task" entry (file "~/org-files/inbox.org")
+      "* TODO %?\n  %U")
+     ("s" "Safari" entry (file "~/org-files/inbox.org")
+      "* TODO %(my-safari-link)\n%U")
+     ("o" "P0 ops work scheduled and clocked in now" entry (file+headline "~/org-files/work.org" "Ops")
+      "* P0 Ops :urgent:ops:\n  %t\n  %u" :clock-in t :clock-keep t :empty-lines 1)
+     ("m" "Meeting now" entry (file+olp+datetree "~/org-files/meetings.org")
+      "* %? :meeting:\n  %T" :clock-in t :clock-keep t :jump-to-captured t :empty-lines 1 :tree-type week)
+     ("j" "Journal" entry (file+olp+datetree "~/org-files/journal.org")
+      "* %?\n")
+     ("p" "" entry (file "~/org-files/inbox.org")
+      "* TODO %:description\n%U\n%:link\n\n#+BEGIN_QUOTE\n%:initial\n#+END_QUOTE" :immediate-finish t :jump-to-captured t)
+     ("L" "" entry (file "~/org-files/inbox.org")
+      "* TODO %:description\n%U\n%:link" :immediate-finish t :jump-to-captured t)))
+
+(use-package org-pomodoro
+  :after org)
+
+(use-package ox-gfm
+  :after org)
+
+(use-package forge
+  :after magit)
+
+(use-package direnv
+ :config
+ (direnv-mode))
+   )
+
+;; Make Org mode work with files ending in .org
+(add-to-list 'auto-mode-alist '("\\.org$" . org-mode))
 
 ;; The above is the default in recent emacsen
 (custom-set-variables
