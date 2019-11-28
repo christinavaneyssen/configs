@@ -197,20 +197,6 @@
      ("L" "" entry (file "~/org-files/inbox.org")
       "* TODO %:description\n%U\n%:link" :immediate-finish t :jump-to-captured t)))
 
-(use-package org-pomodoro
-  :after org)
-
-(use-package ox-gfm
-  :after org)
-
-(use-package forge
-  :after magit)
-
-(use-package direnv
- :config
- (direnv-mode))
-   )
-
 ;; Make Org mode work with files ending in .org
 (add-to-list 'auto-mode-alist '("\\.org$" . org-mode))
 
