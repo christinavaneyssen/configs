@@ -184,6 +184,8 @@
    org-capture-templates
    '(("c" "Task" entry (file "~/org-files/inbox.org")
       "* TODO %?\n  %U")
+     ("a" "Appointment" entry (file "~/org-files/gcal.org")
+      "* %?\n\n%^T\n\n:PROPERTIES:\n\n:END:\n\n")
      ("s" "Safari" entry (file "~/org-files/inbox.org")
       "* TODO %(my-safari-link)\n%U")
      ("o" "P0 ops work scheduled and clocked in now" entry (file+headline "~/org-files/work.org" "Ops")
