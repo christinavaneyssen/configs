@@ -202,6 +202,48 @@
 ;; Make Org mode work with files ending in .org
 (add-to-list 'auto-mode-alist '("\\.org$" . org-mode))
 
+;; GCal Set Up
+(setq package-check-signature nil)
+
+(use-package org-gcal
+    :ensure t
+    :config
+    (setq org-gcal-client-id ""
+    org-gcal-client-secret ""))
+
+(add-hook 'org-agenda-mode-hook (lambda () (org-gcal-sync) ))
+(add-hook 'org-capture-after-finalize-hook (lambda () (org-gcal-sync) ))
+
+(setq org-agenda-custom-commands
+'(("c" "Simple agenda view"
+((agenda "")
+(alltodo "")))))
+
+(use-package calfw
+:ensure ;TODO:
+:config
+(require 'calfw)
+(require 'calfw-org)
+(setq cfw:org-overwrite-default-keybinding t)
+(require 'calfw-ical))
+
+(defun mycalendar ()
+(interactive)
+(cfw:open-calendar-buffer
+:contents-sources
+(list
+;; (cfw:org-create-source "Green")  ; orgmode source
+(cfw:ical-create-source "gcal" "" "IndianRed") ; gCal - Mine
+(cfw:ical-create-source "gcal" "" "IndianRed") ; gcal - Work
+(cfw:ical-create-source "gcal" "" "IndianRed") ; gcal - Xander
+)))
+(setq cfw:org-overwrite-default-keybinding t)
+
+(use-package calfw-gcal
+:ensure t
+:config
+(require 'calfw-gcal))
+
 ;; The above is the default in recent emacsen
 (custom-set-variables
  ;; custom-set-variables was added by Custom.
