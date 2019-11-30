@@ -12,7 +12,8 @@
 ;; Package repos
 ;; GnuELPA package archive is available by default in Emacs 24+
 (setq package-archives '(("gnu" . "https://elpa.gnu.org/packages/")
-                         ("melpa" . "https://melpa.org/packages/")))
+                         ("melpa" . "https://melpa.org/packages/")
+                         ("org" . "https://orgmode.org/elpa/")))
 
 
 ;; Retrieve package list already available from
@@ -45,16 +46,14 @@
 ;;  (package-refresh-contents)
 ;;  (package-install 'use-package))
 
+
 (eval-when-compile
   (require 'use-package))
+
 
 ;; Start Emacs server that listens for external edit requests
 ;; Allows Emacsclient and org-protol to run
 (server-start)
-
-
-;; Secrets
-(load "~/.emacs.d/secrets.el" t)
 
 
 ;; Use UTF-8
