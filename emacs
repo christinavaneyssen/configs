@@ -697,8 +697,8 @@
 
 (use-package org-gcal
     :config
-    (setq org-gcal-client-id "***REMOVED***"
-    org-gcal-client-secret "***REMOVED***"))
+    (setq org-gcal-client-id ""
+    org-gcal-client-secret ""))
 
 (add-hook 'org-agenda-mode-hook (lambda () (org-gcal-sync) ))
 (add-hook 'org-capture-after-finalize-hook (lambda () (org-gcal-sync) ))
@@ -763,12 +763,7 @@
     (cfw:open-calendar-buffer
         :contents-sources
     (list
-        (cfw:ical-create-source "gcal" "***REMOVED***
-" "IndianRed") ; gCal - Mine
-        (cfw:ical-create-source "gcal" "***REMOVED***
-" "IndianRed") ; gcal - Work
-        (cfw:ical-create-source "gcal" "***REMOVED***
-" "IndianRed") ; gcal - Xander
+        (cfw:ical-create-source "gcal" "" "IndianRed")
 )))
 (setq cfw:org-overwrite-default-keybinding t)
 
@@ -778,7 +773,7 @@
 
 
 ;; Keep in Touch
-(setq keepintouch-datafile "~/Dropbox/keepintouch.data")
+(setq keepintouch-datafile "~/org-files/keepintouch.data")
 
 (defun keptintouch (arg)
   "Request a contact in a keepintouch.data file, and update their last
