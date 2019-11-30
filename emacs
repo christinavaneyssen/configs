@@ -613,6 +613,12 @@
                  (sequence "WAITING(w@/!)" "HOLD(h@/!)" "|" "CANCELLED(c@/!)" "PHONE" "MEETING"))))
 
   (add-to-list 'org-modules 'org-habit)
+  (add-to-list 'org-global-properties
+               '("Effort_ALL". "0:05 0:15 0:30 1:00 2:00 3:00 4:00"))
+
+  (setq org-modules
+        '(org-habit org-w3m org-bbdb org-bibtex org-docview org-gnus org-info org-irc org-mhe org-rmail)
+        org-habit-graph-column 105)
   (setq
    org-agenda-files '("~/org-files")
    org-refile-targets '((("~/org-files/work.org" "~/org-files/todo.org") :maxlevel . 1))
@@ -632,10 +638,6 @@
       "* TODO %?\n  %U")
      ("a" "Appointment" entry (file "~/org-files/gcal.org")
       "* %?\n\n%^T\n\n:PROPERTIES:\n\n:END:\n\n")
-     ("s" "Safari" entry (file "~/org-files/inbox.org")
-      "* TODO %(my-safari-link)\n%U")
-     ("o" "P0 ops work scheduled and clocked in now" entry (file+headline "~/org-files/work.org" "Ops")
-      "* P0 Ops :urgent:ops:\n  %t\n  %u" :clock-in t :clock-keep t :empty-lines 1)
      ("m" "Meeting now" entry (file+olp+datetree "~/org-files/meetings.org")
       "* %? :meeting:\n  %T" :clock-in t :clock-keep t :jump-to-captured t :empty-lines 1 :tree-type week)
      ("j" "Journal" entry (file+olp+datetree "~/org-files/journal.org")
@@ -644,6 +646,45 @@
       "* TODO %:description\n%U\n%:link\n\n#+BEGIN_QUOTE\n%:initial\n#+END_QUOTE" :immediate-finish t :jump-to-captured t)
      ("L" "" entry (file "~/org-files/inbox.org")
       "* TODO %:description\n%U\n%:link" :immediate-finish t :jump-to-captured t)))
+
+    (add-hook 'org-agenda-finalize-hook (lambda () (delete-other-windows)))
+    (use-package org-bullets
+        :ensure t
+        :init
+        (add-hook 'org-mode-hook (lambda () (org-bullets-mode 1))))
+     :config
+     (org-load-modules-maybe t)
+     (diminish 'org-indent-mode))
+(defun org-buffer-todo ()
+  (interactive)
+  "Creates a todo-list for the current buffer. Equivalent to the sequence: org-agenda, < (restrict to current buffer), t (todo-list)."
+  (progn
+    (org-agenda-set-restriction-lock 'file)
+    (org-todo-list)))
+
+(defun org-buffer-agenda ()
+  (interactive)
+  "Creates an agenda for the current buffer. Equivalent to the sequence: org-agenda, < (restrict to current buffer), a (agenda-list)."
+  (progn
+    (org-agenda-set-restriction-lock 'file)
+    (org-agenda-list)))
+
+    (defun org-buffer-day-agenda ()
+      (interactive)
+      "Creates an agenda for the current buffer. Equivalent to the sequence: org-agenda, < (restrict to current buffer), a (agenda-list), d (org-agenda-day-view)."
+      (progn
+        (org-agenda-set-restriction-lock 'file)
+        (org-agenda-list)
+        (org-agenda-day-view)))
+
+    (bind-key "y" 'org-agenda-todo-yesterday org-agenda-mode-map)
+
+    (add-hook 'org-mode-hook
+	      (lambda ()
+		(push '("TODO"  . ?▲) prettify-symbols-alist)
+		(push '("DONE"  . ?✓) prettify-symbols-alist)
+		(push '("CANCELLED"  . ?✘) prettify-symbols-alist)
+		(push '("QUESTION"  . ??) prettify-symbols-alist)))
 
 ;; Make Org mode work with files ending in .org
 (add-to-list 'auto-mode-alist '("\\.org$" . org-mode))
@@ -658,6 +699,49 @@
 
 (add-hook 'org-agenda-mode-hook (lambda () (org-gcal-sync) ))
 (add-hook 'org-capture-after-finalize-hook (lambda () (org-gcal-sync) ))
+
+;; Open agenda in full screen
+(defun open-agenda ()
+  "Opens the org-agenda."
+  (interactive)
+  (let ((agenda "*Org Agenda*"))
+    (if (equal (get-buffer agenda) nil)
+        (org-agenda-list)
+      (unless (equal (buffer-name (current-buffer)) agenda)
+        (switch-to-buffer agenda))
+      (org-agenda-redo t)
+      (beginning-of-buffer))))
+
+(bind-key "<f5>" 'open-agenda)
+(bind-key "a" 'open-agenda launcher-map)
+
+;; Kill this buffer
+(defun kill-this-buffer ()
+  (interactive)
+  (kill-buffer (current-buffer)))
+
+(bind-key "C-x C-k" 'kill-this-buffer)
+
+
+;; Kill all other buffers
+(defun kill-other-buffers ()
+   "Kill all other buffers."
+   (interactive)
+   (mapc 'kill-buffer (delq (current-buffer) (buffer-list))))
+
+
+;; Jump back to the nearest heading so that speed
+;; commands can be used
+(defun org-go-speed ()
+  "Goes to the beginning of an element's header, so that you can execute speed commands."
+  (interactive)
+  (when (equal major-mode 'org-mode)
+    (if (org-at-heading-p)
+        (org-beginning-of-line)
+      (org-up-element))))
+
+(bind-key "C-c s" 'org-go-speed)
+
 
 (setq org-agenda-custom-commands
 '(("c" "Simple agenda view"
@@ -688,6 +772,63 @@
 (use-package calfw-gcal
     :config
     (require 'calfw-gcal))
+
+
+;; Keep in Touch
+(setq keepintouch-datafile "~/Dropbox/keepintouch.data")
+
+(defun keptintouch (arg)
+  "Request a contact in a keepintouch.data file, and update their last
+  contacted date (either today, or, if a prefix is supplied, a user-supplied date.)"
+  (interactive "P")
+  (let ((contact (read-string "Who did you contact? "))
+        (date (if (equal arg nil)
+                  (format-time-string "%Y/%m/%d")
+                (read-string "When did you contact them? (year/month/date): "))))
+    (save-excursion
+      (find-file keepintouch-datafile)
+      (goto-char (point-min))
+      (search-forward contact)
+      (forward-line -1)
+      (beginning-of-line)
+      (kill-line)
+      (insert date)
+      (save-buffer)
+      (switch-to-buffer (other-buffer))
+      (kill-buffer (other-buffer)))
+    (message "%s was contacted." contact)))
+
+(defun keptintouch-backlog ()
+  "Create a buffer with Keep In Touch backlog."
+  (interactive)
+  (let ((buf "*Keep In Touch Backlog*")
+        (src "~/src/keepintouch/clj/keepintouch")
+        (jar "-jar target/uberjar/keepintouch-0.1.0-SNAPSHOT-standalone.jar")
+        (cur default-directory)) 
+    (cd src)
+    (shell-command
+     (concat "java " jar " " keepintouch-datafile " schedule backlog") buf)
+    (cd cur)
+    (switch-to-buffer buf)))
+
+(bind-keys ("C-c k" . keptintouch)
+           ("C-c K" . keptintouch-backlog))
+
+
+;; Move lines
+(defun move-line-up ()
+  (interactive)
+  (transpose-lines 1)
+  (forward-line -2))
+
+(defun move-line-down ()
+  (interactive)
+  (forward-line 1)
+  (transpose-lines 1)
+  (forward-line -1))
+
+(bind-keys ("M-<up>" . move-line-up)
+           ("M-<down>" . move-line-down))
 
 ;; The above is the default in recent emacsen
 (custom-set-variables
