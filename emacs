@@ -51,17 +51,426 @@
 ;; Allows Emacsclient and org-protol to run
 (server-start)
 
-;; Disable the splash screen (to enable it agin, replace the t with 0)
+
+;; Secrets
+(load "~/.emacs.d/secrets.el" t)
+
+
+;; Use UTF-8
+(prefer-coding-system 'utf-8)
+(setq coding-system-for-read 'utf-8)
+(setq coding-system-for-write 'utf-8)
+
+
+;; Disable the splash screen
+;; To enable, replace t with 0)
 (setq inhibit-splash-screen t)
+
 
 ;; Enable transient mark mode
 (transient-mark-mode 1)
 
+;; Personalised
 (setq user-full-name "Christina van Eyssen")
 (setq user-mail-address "christinavaneyssen@gmail.com")
 
+
 ;; Highlight matching parent
 (show-paren-mode 1)
+
+
+;; https://github.com/mwfogleman/config/blob/master/home/.emacs.d/michael.org
+;; Delete/copy region if selected else del/copy line
+(defadvice kill-region (before slick-cut activate compile)
+  "When called interactively with no active region, kill a single line instead."
+  (interactive
+   (if mark-active (list (region-beginning) (region-end))
+     (list (line-beginning-position)
+           (line-beginning-position 2)))))
+
+
+;; Backward line delete
+(bind-key "C-<backspace>" (lambda ()
+                            (interactive)
+                            (kill-line 0)
+                            (indent-according-to-mode)))
+
+
+;; Sentences end with 2 spaces by default
+;; This code changes that to 1 space only
+(defadvice forward-sentence (around real-forward)
+  "Consider a sentence to have one space at the end."
+  (let ((sentence-end-double-space nil))
+    ad-do-it))
+
+(defadvice backward-sentence (around real-backward)
+  "Consider a sentence to have one space at the end."
+  (let ((sentence-end-double-space nil))
+    ad-do-it))
+
+(defadvice kill-sentence (around real-kill)
+  "Consider a sentence to have one space at the end."
+  (let ((sentence-end-double-space nil))
+    ad-do-it))
+
+(ad-activate 'forward-sentence)
+(ad-activate 'backward-sentence)
+(ad-activate 'kill-sentence)
+
+
+;; Better paragraph selection key bindings
+(bind-keys ("M-A" . backward-paragraph)
+           ("M-E" . forward-paragraph)
+           ("M-K" . kill-paragraph))
+
+
+;; Platform specific
+(defun is-mac-p
+    ()
+  (eq system-type 'darwin))
+
+
+(if (is-mac-p) (setq osx t)
+  (setq osx nil))
+
+
+(when (is-mac-p)
+  (set-face-attribute 'default nil :height 165))
+
+
+(use-package reveal-in-finder
+  :if osx
+  :ensure t)
+
+
+;; Choose the correct shell
+(use-package shell
+  :bind ("<f1>" . shell)
+  :init
+  (dirtrack-mode)
+  (setq explicit-shell-file-name (cond ((eq system-type 'darwin) "/bin/bash")
+                                       ((eq system-type 'gnu/linux) "/usr/bin/bash")))
+  (when (eq system-type 'darwin)
+    (use-package exec-path-from-shell
+      :ensure t
+      :init
+      (exec-path-from-shell-initialize)))
+  :config
+  (bind-keys :map shell-mode-map
+             ("<s-up>" . comint-previous-input)
+             ("<s-down>" . comint-next-input)))
+
+
+(add-hook 'after-save-hook
+          'executable-make-buffer-file-executable-if-script-p)
+
+
+;; Group related commands together
+(use-package hydra
+  :ensure t
+  :init
+  (defhydra hydra-zoom ()
+    "zoom"
+    ("+" text-scale-increase "in")
+    ("=" text-scale-increase "in")
+    ("-" text-scale-decrease "out")
+    ("_" text-scale-decrease "out")
+    ("0" (text-scale-adjust 0) "reset")
+    ("q" nil "quit" :color blue))
+  (bind-keys ("C-x C-0" . hydra-zoom/body)
+             ("C-x C-=" . hydra-zoom/body)
+             ("C-x C--" . hydra-zoom/body)
+             ("C-x C-+" . hydra-zoom/body))
+  (setq hydra-lv nil))
+
+
+;; Emacs window management
+(use-package golden-ratio
+  :ensure t
+  :diminish golden-ratio-mode
+  :init
+  (golden-ratio-mode 1)
+  (setq golden-ratio-auto-scale t))
+
+
+;; Undo/Redo changes in the window configuration with
+;; C-c left or C-c right
+(use-package winner
+  :init (winner-mode))
+
+
+;; Quit bottom / side windows
+(defun quit-bottom-side-windows ()
+  "Quit side windows of the current frame."
+  (interactive)
+  (dolist (window (window-at-side-list))
+    (quit-window nil window)))
+
+(bind-key "C-c q" #'quit-bottom-side-windows)
+
+
+;; Deletion
+
+(use-package hungry-delete
+  :ensure t
+  :diminish hungry-delete-mode
+  :init
+  (global-hungry-delete-mode))
+
+
+(use-package easy-kill
+  :ensure t
+  :bind ("M-w" . easy-kill))
+
+
+;; History of what's been deleted
+(use-package browse-kill-ring
+  :ensure t
+  :bind ("C-x C-y" . browse-kill-ring)
+  :config
+  (setq browse-kill-ring-quit-action 'kill-and-delete-window))
+
+
+;; Highlight where the cursor is
+(use-package beacon
+  :ensure t
+  :diminish beacon-mode
+  :init
+  (beacon-mode 1)
+  (setq beacon-push-mark 35)
+  (setq beacon-color "#666600"))
+
+
+;; Work through your undo history without changing
+;; anything; which you can then jump to
+(use-package goto-chg
+  :ensure t
+  :bind (("C-c ," . goto-last-change)
+         ("C-c ." . goto-last-change-reverse)))
+
+
+;; Search specific websites
+;; Add Jira in here
+(use-package engine-mode
+  :ensure t
+  :disabled t
+  :init
+  (engine-mode t)
+  (setq engine/browser-function 'eww-browse-url)
+  (engine/set-keymap-prefix (kbd "C-c e"))
+  :config
+  (defengine amazon
+    "http://www.amazon.com/s/ref=nb_sb_noss?url=search-alias%3Daps&field-keywords=%s"
+    :keybinding "a")
+
+  (defengine duckduckgo
+    "https://duckduckgo.com/html/?q=%s"
+    :keybinding "d")
+
+  (defengine github
+    "https://github.com/search?ref=simplesearch&q=%s"
+    :keybinding "g")
+
+  (defengine google-images
+    "http://www.google.com/images?hl=en&source=hp&biw=1440&bih=795&gbv=2&aq=f&aqi=&aql=&oq=&q=%s"
+    :keybinding "i")
+
+  (defengine google-maps
+    "http://maps.google.com/maps?q=%s"
+    :keybinding "m"
+    :docstring "Mappin' it up.")
+
+  (defengine stack-overflow
+    "https://stackoverflow.com/search?q=%s")
+
+  (defengine wikipedia
+    "http://www.wikipedia.org/search-redirect.php?language=en&go=Go&search=%s"
+    :keybinding "w"
+    :docstring "Searchin' the wikis.")
+
+  (defengine youtube
+    "http://www.youtube.com/results?aq=f&oq=&search_query=%s"
+    :keybinding "y"))
+
+
+;; Make RESTful API calls from a text file
+(use-package restclient
+  :ensure t)
+
+
+;; Syntax checking
+(use-package flycheck
+  :ensure t
+  :diminish flycheck-mode
+  :init
+  (use-package flycheck-clojure
+    :ensure t)
+  (global-flycheck-mode)
+  (setq flycheck-indication-mode 'right-fringe)
+  :config
+  (flycheck-clojure-setup))
+
+
+;; Git & Magit
+(use-package magit
+  :ensure t
+  :bind (("C-x g" . magit-status)
+         ("C-c g" . magit-status))
+  :init
+  (use-package git-timemachine
+    :ensure t
+    :bind (("C-x v t" . git-timemachine)))
+  (use-package git-link
+    :ensure t
+    :bind (("C-x v L" . git-link))
+    :init
+    (setq git-link-open-in-browser t))
+  :config
+  (setq magit-use-overlays nil
+        magit-completing-read-function 'ivy-completing-read
+        magit-push-always-verify nil)
+  (diminish 'magit-backup-mode)
+
+  (defun visit-pull-request-url ()
+    "Visit the current branch's PR on Github."
+    (interactive)
+    (browse-url
+     (format "https://github.com/%s/pull/new/%s"
+             (replace-regexp-in-string
+              "\\`.+github\\.com:\\(.+\\)\\.git\\'" "\\1"
+              (magit-get "remote"
+                         (magit-get-remote)
+                         "url"))
+             (cdr (magit-get-remote-branch)))))
+
+  (bind-key "v" 'visit-pull-request-url magit-mode-map)
+
+  (bind-keys :map magit-status-mode-map
+             ("TAB" . magit-section-toggle)
+             ("<C-tab>" . magit-section-cycle))
+  (bind-keys :map magit-branch-section-map
+             ("RET" . magit-checkout)))
+
+
+;; Manage parenthesis
+(use-package smartparens
+  :ensure t
+  :diminish smartparens-mode
+  :bind
+  (("C-M-f" . sp-forward-sexp)
+   ("C-M-b" . sp-backward-sexp)
+   ("C-M-d" . sp-down-sexp)
+   ("C-M-a" . sp-backward-down-sexp)
+   ("C-S-a" . sp-beginning-of-sexp)
+   ("C-S-d" . sp-end-of-sexp)
+   ("C-M-e" . sp-up-sexp)
+   ("C-M-u" . sp-backward-up-sexp)
+   ("C-M-t" . sp-transpose-sexp)
+   ("C-M-n" . sp-next-sexp)
+   ("C-M-p" . sp-previous-sexp)
+   ("C-M-k" . sp-kill-sexp)
+   ("C-M-w" . sp-copy-sexp)
+   ("M-<delete>" . sp-unwrap-sexp)
+   ("M-S-<backspace>" . sp-backward-unwrap-sexp)
+   ("C-<right>" . sp-forward-slurp-sexp)
+   ("C-<left>" . sp-forward-barf-sexp)
+   ("C-M-<left>" . sp-backward-slurp-sexp)
+   ("C-M-<right>" . sp-backward-barf-sexp)
+   ("M-D" . sp-splice-sexp)
+   ("C-M-<delete>" . sp-splice-sexp-killing-forward)
+   ("C-M-<backspace>" . sp-splice-sexp-killing-backward)
+   ("C-M-S-<backspace>" . sp-splice-sexp-killing-around)
+   ("C-]" . sp-select-next-thing-exchange)
+   ("C-<left_bracket>" . sp-select-previous-thing)
+   ("C-M-]" . sp-select-next-thing)
+   ("M-F" . sp-forward-symbol)
+   ("M-B" . sp-backward-symbol)
+   ("H-t" . sp-prefix-tag-object)
+   ("H-p" . sp-prefix-pair-object)
+   ("H-s c" . sp-convolute-sexp)
+   ("H-s a" . sp-absorb-sexp)
+   ("H-s e" . sp-emit-sexp)
+   ("H-s p" . sp-add-to-previous-sexp)
+   ("H-s n" . sp-add-to-next-sexp)
+   ("H-s j" . sp-join-sexp)
+   ("H-s s" . sp-split-sexp)
+   ("M-9" . sp-backward-sexp)
+   ("M-0" . sp-forward-sexp))
+  :init
+  (smartparens-global-mode t)
+  (show-smartparens-global-mode t)
+  (use-package smartparens-config)
+  (bind-key "s" 'smartparens-mode toggle-map)
+  (when (eq system-type 'darwin)
+    (bind-keys ("<s-right>" . sp-forward-slurp-sexp)
+               ("<s-left>" . sp-forward-barf-sexp)))
+  (sp-with-modes '(markdown-mode gfm-mode)
+    (sp-local-pair "*" "*"))
+  (sp-with-modes '(org-mode)
+    (sp-local-pair "=" "=")
+    (sp-local-pair "*" "*")
+    (sp-local-pair "/" "/")
+    (sp-local-pair "_" "_")
+    (sp-local-pair "+" "+")
+    (sp-local-pair "<" ">")
+    (sp-local-pair "[" "]"))
+  (use-package rainbow-delimiters
+    :ensure t
+    :init
+    (add-hook 'prog-mode-hook 'rainbow-delimiters-mode)))
+
+
+;; Project interaction library providing
+;; features on the project level
+(use-package projectile
+  :ensure t
+  :bind ("M-p" . projectile-find-file)
+  :diminish projectile-mode
+  :init
+  (projectile-global-mode)
+  (setq projectile-enable-caching t
+        projectile-completion-system 'ivy)
+  (use-package ibuffer-projectile
+    :ensure t
+    :bind ("C-x C-b" . ibuffer)
+    :init
+    (add-hook 'ibuffer-hook
+              (lambda ()
+                (ibuffer-projectile-set-filter-groups)
+                (unless (eq ibuffer-sorting-mode 'alphabetic)
+                  (ibuffer-do-sort-by-alphabetic))))
+    (bind-keys :map ibuffer-mode-map
+               ("c" . clean-buffer-list)
+               ("n" . ibuffer-forward-filter-group)
+               ("p" . ibuffer-backward-filter-group))))
+
+
+;; Indentiation
+(use-package aggressive-indent
+  :ensure t
+  :diminish aggressive-indent-mode
+  :init
+  (global-aggressive-indent-mode 1)
+  (add-to-list 'aggressive-indent-excluded-modes 'html-mode)
+  (unbind-key "C-c C-q" aggressive-indent-mode-map))
+
+
+;; Line numbers
+(use-package linum-relative
+  :ensure t
+  :init
+  (setq linum-format 'linum-relative)
+  :config
+  (setq linum-relative-current-symbol ""))
+
+
+;; Code commenting
+(use-package comment-dwim-2
+  :ensure t
+  :bind ("M-;" . comment-dwim-2))
+
+
+(setq save-interprogram-paste-before-kill t)
 
 ;; Misc settings
 (setq
