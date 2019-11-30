@@ -1,22 +1,54 @@
 ;; -*- mode: elisp -*-
 
-;; Added by Package.el.  This must come before configurations of
-;; installed packages.  Don't delete this line.  If you don't want it,
-;; just comment it out by adding a semicolon to the start of the line.
-;; You may delete these explanatory comments.
+;; Ensure all packages in package.el are initialized before
+;; attempting to edit them
 (require 'package)
-(setq package-enable-at-startup nil)
-(setq package-archives '(("gnu" . "http://elpa.gnu.org/packages/")
-                         ("melpa" . "http://melpa.org/packages/")))
+
+
+;; Activate all packages (in particular autoloads)
 (package-initialize)
 
-(unless (package-installed-p 'use-package)
-  (package-refresh-contents)
-  (package-install 'use-package))
+
+;; Package repos
+;; GnuELPA package archive is available by default in Emacs 24+
+(setq package-archives '("melpa" . "http://melpa.org/packages/"))
+
+
+;; Retrieve package list already available from
+;; package.el initialized by the first 2 commands
+(unless package-archive-contents
+  (package-refresh-contents))
+
+
+;; Required packages
+(setq package-list '(use-package request calfw calfw-org calfw-ical calfw-gcal))
+
+
+;; Install missing packages
+(dolist (package package-list)
+  (unless (package-installed-p package)
+    (package-install package)))
+
+
+;; Disable automatic package loading at start up
+(setq package-enable-at-startup nil)
+
+
+;; Ensure packages are install automatically if not already present
+;; When set to t, there is no need to specify :ensure t
+(require 'use-package-ensure)
+(setq use-package-always-ensure t)
+
+
+;;(unless (package-installed-p 'use-package)
+;;  (package-refresh-contents)
+;;  (package-install 'use-package))
 
 (eval-when-compile
   (require 'use-package))
 
+;; Start Emacs server that listens for external edit requests
+;; Allows Emacsclient and org-protol to run
 (server-start)
 
 ;; Disable the splash screen (to enable it agin, replace the t with 0)
@@ -68,8 +100,6 @@
 (fset 'yes-or-no-p 'y-or-n-p)
 
 (display-time-mode 1)
-
-(setq use-package-always-ensure t)
 
 (use-package monokai-theme)
 
@@ -127,7 +157,6 @@
 (setq-default word-wrap t)
 
 (use-package markdown-mode
-  :ensure t
   :commands (markdown-mode gfm-mode)
   :mode (("README\\.md\\'" . gfm-mode)
          ("\\.md\\'" . gfm-mode)
@@ -206,7 +235,6 @@
 (setq package-check-signature nil)
 
 (use-package org-gcal
-    :ensure t
     :config
     (setq org-gcal-client-id ""
     org-gcal-client-secret ""))
@@ -220,12 +248,11 @@
 (alltodo "")))))
 
 (use-package calfw
-:ensure ;TODO:
-:config
-(require 'calfw)
-(require 'calfw-org)
-(setq cfw:org-overwrite-default-keybinding t)
-(require 'calfw-ical))
+    :config
+    (require 'calfw)
+    (require 'calfw-org)
+    (setq cfw:org-overwrite-default-keybinding t)
+    (require 'calfw-ical))
 
 (defun mycalendar ()
 (interactive)
@@ -240,9 +267,8 @@
 (setq cfw:org-overwrite-default-keybinding t)
 
 (use-package calfw-gcal
-:ensure t
-:config
-(require 'calfw-gcal))
+    :config
+    (require 'calfw-gcal))
 
 ;; The above is the default in recent emacsen
 (custom-set-variables
@@ -270,7 +296,9 @@
      ("#F309DF" . 85)
      ("#323342" . 100))))
  '(magit-diff-use-overlays nil)
- '(package-selected-packages (quote (org-journal monokai-theme use-package ox-twbs)))
+ '(package-selected-packages
+   (quote
+    (request org-gcal whole-line-or-region calfw-org calfw-cal org-journal monokai-theme use-package ox-twbs)))
  '(pos-tip-background-color "#E6DB74")
  '(pos-tip-foreground-color "#242728")
  '(vc-annotate-background nil)
