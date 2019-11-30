@@ -654,13 +654,16 @@
         (add-hook 'org-mode-hook (lambda () (org-bullets-mode 1))))
      :config
      (org-load-modules-maybe t)
-     (diminish 'org-indent-mode))
+     (eval-after-load 'org-indent '(diminish 'org-indent-mode))
+
+
 (defun org-buffer-todo ()
   (interactive)
   "Creates a todo-list for the current buffer. Equivalent to the sequence: org-agenda, < (restrict to current buffer), t (todo-list)."
   (progn
     (org-agenda-set-restriction-lock 'file)
     (org-todo-list)))
+
 
 (defun org-buffer-agenda ()
   (interactive)
@@ -713,7 +716,7 @@
       (beginning-of-buffer))))
 
 (bind-key "<f5>" 'open-agenda)
-(bind-key "a" 'open-agenda launcher-map)
+;;(bind-key "a" 'open-agenda launcher-map)
 
 ;; Kill this buffer
 (defun kill-this-buffer ()
