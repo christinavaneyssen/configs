@@ -11,7 +11,8 @@
 
 ;; Package repos
 ;; GnuELPA package archive is available by default in Emacs 24+
-(setq package-archives '("melpa" . "http://melpa.org/packages/"))
+(setq package-archives '(("gnu" . "https://elpa.gnu.org/packages/")
+                         ("melpa" . "https://melpa.org/packages/")))
 
 
 ;; Retrieve package list already available from
@@ -21,7 +22,7 @@
 
 
 ;; Required packages
-(setq package-list '(use-package request calfw calfw-org calfw-ical calfw-gcal))
+(setq package-list '(use-package smartparens request calfw calfw-org calfw-ical calfw-gcal zenburn))
 
 
 ;; Install missing packages
@@ -138,11 +139,6 @@
   (set-face-attribute 'default nil :height 165))
 
 
-(use-package reveal-in-finder
-  :if osx
-  :ensure t)
-
-
 ;; Choose the correct shell
 (use-package shell
   :bind ("<f1>" . shell)
@@ -210,7 +206,6 @@
 
 
 ;; Deletion
-
 (use-package hungry-delete
   :ensure t
   :diminish hungry-delete-mode
@@ -250,7 +245,7 @@
 
 
 ;; Search specific websites
-;; Add Jira in here
+;; TODO Add Jira in here
 (use-package engine-mode
   :ensure t
   :disabled t
@@ -352,9 +347,13 @@
              ("RET" . magit-checkout)))
 
 
+(use-package reveal-in-osx-finder
+  :if osx
+  :ensure t)
+
+
 ;; Manage parenthesis
 (use-package smartparens
-  :ensure t
   :diminish smartparens-mode
   :bind
   (("C-M-f" . sp-forward-sexp)
@@ -399,8 +398,8 @@
   :init
   (smartparens-global-mode t)
   (show-smartparens-global-mode t)
-  (use-package smartparens-config)
-  (bind-key "s" 'smartparens-mode toggle-map)
+  ;;(use-package smartparens-config)
+  ;;(bind-key "s" 'smartparens-mode toggle-map)
   (when (eq system-type 'darwin)
     (bind-keys ("<s-right>" . sp-forward-slurp-sexp)
                ("<s-left>" . sp-forward-barf-sexp)))
@@ -470,6 +469,16 @@
   :bind ("M-;" . comment-dwim-2))
 
 
+
+;;;;;;
+
+
+;; Themes
+(add-hook 'after-init-hook (lambda () (load-theme 'zenburn t)))
+;;(load-theme 'zenburn t)
+;; (use-package monokai-theme)
+
+
 (setq save-interprogram-paste-before-kill t)
 
 ;; Misc settings
@@ -510,7 +519,6 @@
 
 (display-time-mode 1)
 
-(use-package monokai-theme)
 
 (defun bh/hide-other ()
   (interactive)
@@ -645,8 +653,8 @@
 
 (use-package org-gcal
     :config
-    (setq org-gcal-client-id ""
-    org-gcal-client-secret ""))
+    (setq org-gcal-client-id "***REMOVED***"
+    org-gcal-client-secret "***REMOVED***"))
 
 (add-hook 'org-agenda-mode-hook (lambda () (org-gcal-sync) ))
 (add-hook 'org-capture-after-finalize-hook (lambda () (org-gcal-sync) ))
@@ -664,14 +672,16 @@
     (require 'calfw-ical))
 
 (defun mycalendar ()
-(interactive)
-(cfw:open-calendar-buffer
-:contents-sources
-(list
-;; (cfw:org-create-source "Green")  ; orgmode source
-(cfw:ical-create-source "gcal" "" "IndianRed") ; gCal - Mine
-(cfw:ical-create-source "gcal" "" "IndianRed") ; gcal - Work
-(cfw:ical-create-source "gcal" "" "IndianRed") ; gcal - Xander
+    (interactive)
+    (cfw:open-calendar-buffer
+        :contents-sources
+    (list
+        (cfw:ical-create-source "gcal" "***REMOVED***
+" "IndianRed") ; gCal - Mine
+        (cfw:ical-create-source "gcal" "***REMOVED***
+" "IndianRed") ; gcal - Work
+        (cfw:ical-create-source "gcal" "***REMOVED***
+" "IndianRed") ; gcal - Xander
 )))
 (setq cfw:org-overwrite-default-keybinding t)
 
@@ -707,7 +717,7 @@
  '(magit-diff-use-overlays nil)
  '(package-selected-packages
    (quote
-    (request org-gcal whole-line-or-region calfw-org calfw-cal org-journal monokai-theme use-package ox-twbs)))
+    (reveal-in-osx-finder request org-gcal whole-line-or-region calfw-org calfw-cal org-journal monokai-theme use-package ox-twbs)))
  '(pos-tip-background-color "#E6DB74")
  '(pos-tip-foreground-color "#242728")
  '(vc-annotate-background nil)
