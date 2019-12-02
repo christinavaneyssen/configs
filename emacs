@@ -36,6 +36,10 @@
 (setq package-enable-at-startup nil)
 
 
+;; Paradox github stars
+(setq paradox-github-token "257bc04184e4f02a375aa3f91cb430b7ea9154b1")
+
+
 ;; Ensure packages are install automatically if not already present
 ;; When set to t, there is no need to specify :ensure t
 (require 'use-package-ensure)
@@ -590,7 +594,7 @@
          ("C-c a" . org-agenda)
          ("C-c c" . org-capture)
          ("C-c C-x C-j" . org-clock-goto))
-  :config
+   :config
 
   (defun org-insert-inactive-time-stamp ()
     "Insert an inactive time stamp."
@@ -614,11 +618,20 @@
   (add-to-list 'org-modules 'org-habit)
   (add-to-list 'org-global-properties
                '("Effort_ALL". "0:05 0:15 0:30 1:00 2:00 3:00 4:00"))
-
   (setq org-modules
         '(org-habit org-w3m org-bbdb org-bibtex org-docview org-gnus org-info org-irc org-mhe org-rmail)
         org-habit-graph-column 105)
   (setq
+   org-agenda-tags-column -100 ;; screen width
+   org-agenda-sticky nil
+   org-agenda-show-log t
+   org-agenda-skip-scheduled-if-done t
+   org-agenda-skip-deadline-if-done t
+   org-agenda-time-grid
+        '((daily today require-timed)
+        (08:00 10:00 12:00 14:00 16:00 18:00 20:00)
+        "...." "----------------")
+   org-columns-default-format "%14SCHEDULED %Effort{:} %1PRIORITY %TODO %50ITEM %TAGS"
    org-agenda-files '("~/org-files")
    org-refile-targets '((("~/org-files/work.org" "~/org-files/todo.org") :maxlevel . 1))
    org-deadline-warning-days 14
@@ -627,7 +640,7 @@
    org-fast-tag-selection-single-key 'expert
    org-use-fast-todo-selection t
    org-export-backends '(ascii html icalendar md)
-   org-agenda-span 'day
+   org-agenda-span 'week
    org-enforce-todo-dependencies t
    org-log-done 'time
    org-log-redeadline 'time
@@ -855,7 +868,8 @@
  '(magit-diff-use-overlays nil)
  '(package-selected-packages
    (quote
-    (reveal-in-osx-finder request org-gcal whole-line-or-region calfw-org calfw-cal org-journal monokai-theme use-package ox-twbs)))
+    (abl-mode ac-helm achievements activity-watch-mode annalist auto-auto-indent auto-complete auto-complete-chunk bash-completion better-defaults cheat-sh cheatsheet checkbox clean-buffers clocker confluence creds defrepeater demo-it org-beautify-theme org-clock-convenience org-clock-today org-dashboard org-doing org-drill org-drill-table org-ehtml org-jira org-journal-list org-kanban org-make-toc org-mru-clock org-msg org-multiple-keymap org-notebook org-password-manager org-pdfview org-plus-contrib org-pretty-tags org-projectile org-protocol-jekyll org-ql org-radiobutton org-random-todo org-recur org-review org-rich-yank org-seek org-sidebar org-super-agenda org-table-sticky-header org-tanglesync org-time-budgets ox-jira pandoc paradox pretty-hydra pretty-mode rainbow-blocks rainbow-identifiers reveal-in-osx-finder request org-gcal whole-line-or-region calfw-org calfw-cal org-journal monokai-theme use-package ox-twbs)))
+ '(paradox-automatically-star t)
  '(pos-tip-background-color "#E6DB74")
  '(pos-tip-foreground-color "#242728")
  '(vc-annotate-background nil)
