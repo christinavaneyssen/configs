@@ -615,26 +615,6 @@
          (quote ((sequence "TODO(t)" "NEXT(n)" "|" "DONE(d)")
                  (sequence "WAITING(w@/!)" "HOLD(h@/!)" "|" "CANCELLED(c@/!)" "PHONE" "MEETING"))))
 
-  (defvar my/org-meeting-template "** Meeting about %^{something}
-SCHEDULED: %<%Y-%m-%d %H:%M>
-
-*Attendees:*
-
-- [X] Nick Anderson
-- [ ] %?
-
-
-*Agenda:*
--
--
-
-*Notes:*
-
-
-" "Meeting Template")
-
-
-
   (add-to-list 'org-modules 'org-habit)
   (add-to-list 'org-global-properties
                '("Effort_ALL". "0:05 0:15 0:30 1:00 2:00 3:00 4:00"))
@@ -670,16 +650,28 @@ SCHEDULED: %<%Y-%m-%d %H:%M>
       "* TODO %?\n  %U")
      ("a" "Appointment" entry (file "~/org-files/gcal.org")
       "* %?\n\n%^T\n\n:PROPERTIES:\n\n:END:\n\n")
-;;     ("m" "Meeting now" entry (file+olp+datetree "~/org-files/meetings.org")
-;;      "* %? :meeting:\n  %T" :clock-in t :clock-keep t :jump-to-captured t :empty-lines 1 :tree-type week)
+     ("m" "Meeting" entry (file+olp+datetree "~/org-files/meetings.org")
+      "* Meeting about %?\n  %T\n** Attended:\n" :clock-in t :clock-keep t :jump-to-captured t :empty-lines 1 :tree-type week)
      ("j" "Journal" entry (file+olp+datetree "~/org-files/journal.org")
       "* %?\n")
      ("p" "" entry (file "~/org-files/inbox.org")
       "* TODO %:description\n%U\n%:link\n\n#+BEGIN_QUOTE\n%:initial\n#+END_QUOTE" :immediate-finish t :jump-to-captured t)
      ("L" "" entry (file "~/org-files/inbox.org")
       "* TODO %:description\n%U\n%:link" :immediate-finish t :jump-to-captured t)
-     ("m" "Meeting" entry (file+olp+datetree "~/org/cfengine/cfengine.org" "Meeting Notes")
-      ,my/org-meeting-template)))
+	   ;; MEETING  (m) Meeting template
+	   ("m" "Meeting" entry (file+olp+datetree "~/org-files/meetings.org")
+		"* Meeting about %?\n
+	  CLOSED: %U
+	  :PROPERTIES:
+	  :Attend:
+	  :Notes:
+	  :END:
+	  :LOGBOOK:
+	  - State \"Meeting\"    from \"\"           %U
+	  :END:
+	  %^T--%^T" :empty-lines 1)
+))
+
 
     (add-hook 'org-agenda-finalize-hook (lambda () (delete-other-windows)))
     (use-package org-bullets
