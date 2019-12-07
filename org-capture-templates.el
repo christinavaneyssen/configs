@@ -1,17 +1,3 @@
-;; My templates currently
-
-
-;; properties can be set with org-set-property
-
-;;(("t" "Task" entry (file "~/org-files/inbox.org")
-;;  "* TODO %?\n  %U")
-;; ("a" "Appointment" entry (file "~/org-files/gcal.org")
-;;  "* %?\n\n%^T\n\n:PROPERTIES:\n\n:END:\n\n")
-;; ("m" "Meeting" entry (file+olp+datetree "~/org-files/meetings.org")
-;;  "* Meeting about %?\n  %T\n** Attended:\n" :clock-in t :clock-keep t :jump-to-captured t :empty-lines 1 :tree-type week)
-;; ("j" "Journal" entry (file+olp+datetree "~/org-files/journal.org")
-;;  "* %?\n")))
-
 (setq org-capture-templates
       '(
 
@@ -205,5 +191,3 @@ and then insert a link in line of the new todo task."
   ;;(org-delete-backward-char 1))
 
 (define-key org-mode-map "\C-cm" 'my/org-capture-during-meeting)
-
-
