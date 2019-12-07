@@ -447,7 +447,7 @@
                ("p" . ibuffer-backward-filter-group))))
 
 
-;; Indentiation
+;; Indentation
 (use-package aggressive-indent
   :ensure t
   :diminish aggressive-indent-mode
@@ -633,7 +633,7 @@
         "...." "----------------")
    org-columns-default-format "%14SCHEDULED %Effort{:} %1PRIORITY %TODO %50ITEM %TAGS"
    org-agenda-files '("~/org-files")
-   org-refile-targets '((("~/org-files/work.org" "~/org-files/todo.org") :maxlevel . 1))
+   org-refile-targets '((("~/org-files/work.org" "~/org-files/personal.org" "~/org-files/todo.org") :maxlevel . 1))
    org-deadline-warning-days 14
    org-default-notes-file "~/org-files/todo.org"
    org-reverse-note-order t
@@ -645,42 +645,34 @@
    org-log-done 'time
    org-log-redeadline 'time
    org-log-reschedule 'time
-   org-capture-templates
-   '(("t" "Task" entry (file "~/org-files/inbox.org")
-      "* TODO %?\n  %U")
-     ("a" "Appointment" entry (file "~/org-files/gcal.org")
-      "* %?\n\n%^T\n\n:PROPERTIES:\n\n:END:\n\n")
-     ("m" "Meeting" entry (file+olp+datetree "~/org-files/meetings.org")
-      "* Meeting about %?\n  %T\n** Attended:\n" :clock-in t :clock-keep t :jump-to-captured t :empty-lines 1 :tree-type week)
-     ("j" "Journal" entry (file+olp+datetree "~/org-files/journal.org")
-      "* %?\n")
-     ("p" "" entry (file "~/org-files/inbox.org")
-      "* TODO %:description\n%U\n%:link\n\n#+BEGIN_QUOTE\n%:initial\n#+END_QUOTE" :immediate-finish t :jump-to-captured t)
-     ("L" "" entry (file "~/org-files/inbox.org")
-      "* TODO %:description\n%U\n%:link" :immediate-finish t :jump-to-captured t)
-	   ;; MEETING  (m) Meeting template
-	   ("m" "Meeting" entry (file+olp+datetree "~/org-files/meetings.org")
-		"* Meeting about %?\n
-	  CLOSED: %U
-	  :PROPERTIES:
-	  :Attend:
-	  :Notes:
-	  :END:
-	  :LOGBOOK:
-	  - State \"Meeting\"    from \"\"           %U
-	  :END:
-	  %^T--%^T" :empty-lines 1)
-))
+;;   org-capture-templates
+;;   '(("t" "Task" entry (file "~/org-files/inbox.org")
+;;      "* TODO %?\n  %U")
+;;     ("a" "Appointment" entry (file "~/org-files/gcal.org")
+;;      "* %?\n\n%^T\n\n:PROPERTIES:\n\n:END:\n\n")
+;;     ("m" "Meeting" entry (file+olp+datetree "~/org-files/meetings.org")
+;;      "* Meeting about %?\n  %T\n** Attended:\n" :clock-in t :clock-keep t :jump-to-captured t :empty-lines 1 :tree-type week)
+;;     ("j" "Journal" entry (file+olp+datetree "~/org-files/journal.org")
+;;      "* %?\n"))
+)
 
+(load "~/.emacs.d/org-mode-config/org-capture-templates")
 
-    (add-hook 'org-agenda-finalize-hook (lambda () (delete-other-windows)))
-    (use-package org-bullets
-        :ensure t
-        :init
-        (add-hook 'org-mode-hook (lambda () (org-bullets-mode 1))))
-     :config
-     (org-load-modules-maybe t)
-     (eval-after-load 'org-indent '(diminish 'org-indent-mode))
+;; Log the time when a TODO item was finished
+(setq org-log-done 'time)
+
+;; Specify global tags with fast tag selection
+(setq org-tag-alist '((:startgroup . nil) ("work" . ?w) ("personal" . ?p) (:endgroup . nil)
+                      ("computer" . ?c) ("reading" . ?r) ("grocery" . ?g) ("homework" . ?w) ("research" . ?r)))
+
+(add-hook 'org-agenda-finalize-hook (lambda () (delete-other-windows)))
+(use-package org-bullets
+    :ensure t
+    :init
+    (add-hook 'org-mode-hook (lambda () (org-bullets-mode 1))))
+ :config
+  (org-load-modules-maybe t)
+ (eval-after-load 'org-indent '(diminish 'org-indent-mode))
 
 
 (defun org-buffer-todo ()
@@ -714,6 +706,56 @@
 		(push '("DONE"  . ?✓) prettify-symbols-alist)
 		(push '("CANCELLED"  . ?✘) prettify-symbols-alist)
 		(push '("QUESTION"  . ??) prettify-symbols-alist)))
+
+;; Add time estimate on the fly when clocking in
+;; FIXME: Requests effort for meetings 
+;;    (add-hook 'org-clock-in-prepare-hook
+;;	      'my-org-mode-ask-effort)
+;;
+;;    (defun my-org-mode-ask-effort ()
+;;      "Ask for an effort estimate when clocking in."
+;;      (unless (org-entry-get (point) "Effort")
+;;	(let ((effort
+;;	       (completing-read
+;;		"Effort: "
+;;		(org-entry-get-multivalued-property (point) "Effort"))))
+;;	  (unless (equal effort "")
+;;	    (org-set-property "Effort" effort)))))
+
+;; Show agenda view when emacs idle for 5 mins
+    (defun jump-to-org-agenda ()
+      (interactive)
+      (let ((buf (get-buffer "*Org Agenda*"))
+	    wind)
+	(if buf
+	    (if (setq wind (get-buffer-window buf))
+		(select-window wind)
+	      (if (called-interactively-p)
+		  (progn
+		    (select-window (display-buffer buf t t))
+		    (org-fit-window-to-buffer)
+		    ;; (org-agenda-redo)
+		    )
+		(with-selected-window (display-buffer buf)
+		  (org-fit-window-to-buffer)
+		  ;; (org-agenda-redo)
+		  )))
+	  (call-interactively 'org-agenda-list)))
+      ;;(let ((buf (get-buffer "*Calendar*")))
+      ;;  (unless (get-buffer-window buf)
+      ;;    (org-agenda-goto-calendar)))
+      )
+
+(run-with-idle-timer 300 t 'jump-to-org-agenda)
+
+;; Refresh agenda automatically every 5 mins
+    (defun kiwon/org-agenda-redo-in-other-window ()
+      "Call org-agenda-redo function even in the non-agenda buffer."
+      (interactive)
+      (let ((agenda-window (get-buffer-window org-agenda-buffer-name t)))
+	(when agenda-window
+	  (with-selected-window agenda-window (org-agenda-redo)))))
+    (run-at-time nil 300 'kiwon/org-agenda-redo-in-other-window)
 
 ;; Make Org mode work with files ending in .org
 (add-to-list 'auto-mode-alist '("\\.org$" . org-mode))
