@@ -59,6 +59,11 @@
 ;; Allows Emacsclient and org-protol to run
 (server-start)
 
+(require 'virtualenvwrapper)
+(venv-initialize-interactive-shells) ;; if you want interactive shell support
+(venv-initialize-eshell) ;; if you want eshell support
+(setq venv-location "~/.envs/")
+
 
 ;; Use UTF-8
 (prefer-coding-system 'utf-8)
@@ -550,12 +555,12 @@
   (interactive)
   (switch-to-buffer "*scratch*"))
 
-;;(use-package python
-;;  :config
-;;  (setq
-;;   python-shell-interpreter "python3"
-;;   python-shell-completion-native-enable nil)
-;;  (use-package blacken))
+(use-package python
+  :config
+  (setq
+   python-shell-interpreter "python3"
+   python-shell-completion-native-enable nil)
+  (use-package blacken))
 
 (use-package magit
   :bind (("C-x g" . magit-status)))
@@ -596,6 +601,10 @@
          ("C-c C-x C-j" . org-clock-goto))
    :config
 
+   (org-babel-do-load-languages
+        'org-babel-load-languages
+         '((python . t)))
+
   (defun org-insert-inactive-time-stamp ()
     "Insert an inactive time stamp."
     (interactive)
@@ -610,6 +619,7 @@
 
   (require 'org-protocol)
   (require 'org-inlinetask)
+  (require 'org-tempo)
 
   (setq org-todo-keywords
          (quote ((sequence "TODO(t)" "NEXT(n)" "|" "DONE(d)")
@@ -924,7 +934,7 @@
  '(magit-diff-use-overlays nil)
  '(package-selected-packages
    (quote
-    (abl-mode ac-helm achievements activity-watch-mode annalist auto-auto-indent auto-complete auto-complete-chunk bash-completion better-defaults cheat-sh cheatsheet checkbox clean-buffers clocker confluence creds defrepeater demo-it org-beautify-theme org-clock-convenience org-clock-today org-dashboard org-doing org-drill org-drill-table org-ehtml org-jira org-journal-list org-kanban org-make-toc org-mru-clock org-msg org-multiple-keymap org-notebook org-password-manager org-pdfview org-plus-contrib org-pretty-tags org-projectile org-protocol-jekyll org-ql org-radiobutton org-random-todo org-recur org-review org-rich-yank org-seek org-sidebar org-super-agenda org-table-sticky-header org-tanglesync org-time-budgets ox-jira pandoc paradox pretty-hydra pretty-mode rainbow-blocks rainbow-identifiers reveal-in-osx-finder request org-gcal whole-line-or-region calfw-org calfw-cal org-journal monokai-theme use-package ox-twbs)))
+    (virtualenvwrapper abl-mode ac-helm achievements activity-watch-mode annalist auto-auto-indent auto-complete auto-complete-chunk bash-completion better-defaults cheat-sh cheatsheet checkbox clean-buffers clocker confluence creds defrepeater demo-it org-beautify-theme org-clock-convenience org-clock-today org-dashboard org-doing org-drill org-drill-table org-ehtml org-jira org-journal-list org-kanban org-make-toc org-mru-clock org-msg org-multiple-keymap org-notebook org-password-manager org-pdfview org-plus-contrib org-pretty-tags org-projectile org-protocol-jekyll org-ql org-radiobutton org-random-todo org-recur org-review org-rich-yank org-seek org-sidebar org-super-agenda org-table-sticky-header org-tanglesync org-time-budgets ox-jira pandoc paradox pretty-hydra pretty-mode rainbow-blocks rainbow-identifiers reveal-in-osx-finder request org-gcal whole-line-or-region calfw-org calfw-cal org-journal monokai-theme use-package ox-twbs)))
  '(paradox-automatically-star t)
  '(pos-tip-background-color "#E6DB74")
  '(pos-tip-foreground-color "#242728")
