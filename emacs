@@ -631,12 +631,18 @@
   (setq org-modules
         '(org-habit org-w3m org-bbdb org-bibtex org-docview org-gnus org-info org-irc org-mhe org-rmail)
         org-habit-graph-column 105)
+
   (setq
    org-agenda-tags-column -100 ;; screen width
    org-agenda-sticky nil
    org-agenda-show-log t
    org-agenda-skip-scheduled-if-done t
    org-agenda-skip-deadline-if-done t
+   ;; https://www.reddit.com/r/orgmode/comments/e4stk2/adding_a_separator_line_between_days_in_emacs/
+   org-agenda-format-date (lambda (date) (concat "\n"
+                                                    (make-string (window-width) 9472)
+                                                    "\n"
+                                                    (org-agenda-format-date-aligned date)))
    org-agenda-time-grid
         '((daily today require-timed)
         (08:00 10:00 12:00 14:00 16:00 18:00 20:00)
