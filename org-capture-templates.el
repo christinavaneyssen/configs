@@ -1,14 +1,11 @@
 (setq org-capture-templates
       '(
 
+        ;; TODO Add these:
         ;; Movies
         ;; Reading list
 
-        ;; Templates for the TASKS keyword sequence
-        ("t" "Tasks")
-
-        ;; TODO     (t) Todo template
-        ("tt" "TODO      (t) Todo" entry (file "~/org-files/inbox.org")
+        ("t" "Todo" entry (file "~/org-files/inbox.org")
          "* TODO %?
   :PROPERTIES:
   :Location:
@@ -20,8 +17,7 @@
   :CLOCK:
   :END:" :empty-lines 1)
 
-        ;; WAITING  (w) Waiting template
-        ("tw" "WAITING   (w) Waiting" entry (file "~/org-files/inbox.org")
+        ("w" "Waiting" entry (file "~/org-files/inbox.org")
          "* WAITING %?
   :PROPERTIES:
   :Location:
@@ -32,8 +28,7 @@
   :CREATED: %U
   :END:" :empty-lines 1)
 
-        ;; MEETING  (m) Meeting template
-        ("tm" "(m) Meeting" entry (file "~/org-files/inbox.org")
+        ("m" "Meeting" entry (file "~/org-files/inbox.org")
          "* MEETING %^{description}
   :PROPERTIES:
   :Attendees:
@@ -45,16 +40,14 @@
   Notes:
   %?" :clock-in t :clock-keep t :jump-to-captured t :empty-lines 1 :tree-type week)
 
-        ;;          (a) Appointment template
-        ("ta" "          (a) Appointment" entry (file "~/org-files/gcal.org")
+        ("a" "Appointment" entry (file "~/org-files/gcal.org")
          "* %?
   :PROPERTIES:
   :Note:
   :END:
   %^T--%^T" :empty-lines 1)
 
-        ;;          (j) Journal template
-        ("tj" "          (j) Journal" entry (file+olp+datetree "~/org-files/journal.org")
+        ("j" "Journal" entry (file+olp+datetree "~/org-files/journal.org")
          "* Journal :org:
   :PROPERTIES:
   :Note:
@@ -62,8 +55,7 @@
   :CREATED: %U
   %t\n\n  %?" :empty-lines 1)
 
-        ;;          (n) Note template
-        ("tn" "          (n) Note" entry (file "~/org-files/inbox.org")
+        ("n" "Note" entry (file "~/org-files/notes.org")
          "* %? :note:
   :PROPERTIES:
   :Via:
@@ -73,24 +65,20 @@
   :CREATED: %U
   :END:" :empty-lines 1)
 
-        ("o" "Org-Protocol")
+        ;;("o" "Org-Protocol")
         ;; TODO     (t) Org-protocol todo template
         ;; Alternatively use [[%:link][%:description]] for :Via:
-        ("tp" "TODO      (p) Org-Protocol Todo" entry (file "~/org-files/inbox.org")
-         "* TODO %?
-  :PROPERTIES:
-  :Via:      %:annotation
-  :Note:
-  :END:
-  :LOGBOOK:
-  :CREATED: %U
-  :END:" :empty-lines 1)
+        ;;("tp" "TODO      (p) Org-Protocol Todo" entry (file "~/org-files/inbox.org")
+        ;;        "* TODO %?
+        ;;  :PROPERTIES:
+        ;;  :Via:      %:annotation
+        ;;  :Note:
+        ;;  :END:
+        ;;  :LOGBOOK:
+        ;;  :CREATED: %U
+        ;;  :END:" :empty-lines 1)
 
-        ;; Templates for the IDEAS keyword sequence
-        ("i" "Ideas")
-
-        ;; GIFT     (g) Gift    template
-        ("ig" "GIFT      (g) Gift" entry (file "~/org-files/inbox.org")
+        ("g" "Gift" entry (file "~/org-files/gifts.org")
          "* GIFT %?
   :PROPERTIES:
   :Link:
@@ -101,8 +89,7 @@
   :CREATED: %U
   :END:" :empty-lines 1)
 
-        ;; OUTING    (o) Outing template
-        ("io" "VISIT     (o) Visit" entry (file "~/org-files/inbox.org")
+        ("v" "Visit/Outings" entry (file "~/org-files/outings.org")
          "* VISIT %?
   :PROPERTIES:
   :Location:
@@ -115,8 +102,7 @@
   :END:
   %^t--%^t" :empty-lines 1)
 
-        ;; CODE PROJECT     (c) CODE PROJECT template
-        ("ic" "CODE PROJECT      (c) Code Project" entry (file "~/org-files/inbox.org")
+        ("c" "Code Project" entry (file "~/org-files/tech-notebook.org")
          "* IDEA %?
   :PROPERTIES:
   :Via:
@@ -126,25 +112,23 @@
   :CREATED: %U
   :END:" :empty-lines 1)
 
-        ;; REFERENCE(f) Reference template
-        ("mf" "REFERENCE (f) Reference org-protocol" entry (file "~/org-files/inbox.org")
-         "* REFERENCE [[%:link][%:description]]
-  :PROPERTIES:
-  :Creator:  %:creator
-  :Created:  %:description
-  :Source:   %:source
-  :Via:      %:via
-  :Link:     %:link
-  :Date:     %:date
-  :Note:     %:note
-  :END:
-  :LOGBOOK:
-  :CREATED: %U
-  :END:
-  %:initial" :empty-lines 1)
+;;        ("m" "REFERENCE (f) Reference org-protocol" entry (file "~/org-files/inbox.org")
+;;         "* REFERENCE [[%:link][%:description]]
+;;  :PROPERTIES:
+;;  :Creator:  %:creator
+;;  :Created:  %:description
+;;  :Source:   %:source
+;;  :Via:      %:via
+;;  :Link:     %:link
+;;  :Date:     %:date
+;;  :Note:     %:note
+;;  :END:
+;;  :LOGBOOK:
+;;  :CREATED: %U
+;;  :END:
+;;  %:initial" :empty-lines 1)
 
-        ;; WEB REFERENCE(f) Web Reference template
-        ("ow" "Web site" entry
+        ("w" "Web site" entry
          (file "~/org-files/inbox.org")
          "* %a :website:\n\n%U %?\n\n%:initial")
 
