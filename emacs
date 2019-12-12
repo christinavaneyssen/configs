@@ -674,6 +674,68 @@
 
 (load "~/.emacs.d/org-mode-config/org-capture-templates")
 
+
+(global-set-key (kbd "C-x w") 'elfeed)
+
+
+(use-package elfeed
+  :ensure t
+  :bind (:map elfeed-search-mode-map
+              ("A" . my/elfeed-show-all)
+              ("E" . my/elfeed-show-emacs)
+              ("D" . my/elfeed-show-daily)
+              ("q" . my/elfeed-save-db-and-bury)))
+
+
+;; Managing RSS feeds
+(use-package elfeed-org
+  :ensure t
+  :config
+  (elfeed-org)
+  (setq rmh-elfeed-org-files (list "~/org-files/elfeed.org")))
+
+
+(defun my/elfeed-mark-all-as-read ()
+      (interactive)
+      (mark-whole-buffer)
+      (elfeed-search-untag-all-unread))
+
+(define-key elfeed-search-mode-map (kbd "R") 'my/elfeed-mark-all-as-read)
+
+
+;; Elfeed shortcut functions
+(defun my/elfeed-show-all ()
+  (interactive)
+  (bookmark-maybe-load-default-file)
+  (bookmark-jump "elfeed-all"))
+(defun my/elfeed-show-emacs ()
+  (interactive)
+  (bookmark-maybe-load-default-file)
+  (bookmark-jump "elfeed-emacs"))
+(defun my/elfeed-show-daily ()
+  (interactive)
+  (bookmark-maybe-load-default-file)
+  (bookmark-jump "elfeed-daily"))
+
+
+;;functions to support syncing .elfeed between machines
+;;makes sure elfeed reads index from disk before launching
+(defun my/elfeed-load-db-and-open ()
+  "Wrapper to load the elfeed db from disk before opening"
+  (interactive)
+  (elfeed-db-load)
+  (elfeed)
+  (elfeed-search-update--force))
+
+;;write to disk when quiting
+(defun my/elfeed-save-db-and-bury ()
+  "Wrapper to save the elfeed db to disk before burying buffer"
+  (interactive)
+  (elfeed-db-save)
+  (quit-window))
+
+
+
 ;; Log the time when a TODO item was finished
 (setq org-log-done 'time)
 
@@ -940,7 +1002,7 @@
  '(magit-diff-use-overlays nil)
  '(package-selected-packages
    (quote
-    (virtualenvwrapper abl-mode ac-helm achievements activity-watch-mode annalist auto-auto-indent auto-complete auto-complete-chunk bash-completion better-defaults cheat-sh cheatsheet checkbox clean-buffers clocker confluence creds defrepeater demo-it org-beautify-theme org-clock-convenience org-clock-today org-dashboard org-doing org-drill org-drill-table org-ehtml org-jira org-journal-list org-kanban org-make-toc org-mru-clock org-msg org-multiple-keymap org-notebook org-password-manager org-pdfview org-plus-contrib org-pretty-tags org-projectile org-protocol-jekyll org-ql org-radiobutton org-random-todo org-recur org-review org-rich-yank org-seek org-sidebar org-super-agenda org-table-sticky-header org-tanglesync org-time-budgets ox-jira pandoc paradox pretty-hydra pretty-mode rainbow-blocks rainbow-identifiers reveal-in-osx-finder request org-gcal whole-line-or-region calfw-org calfw-cal org-journal monokai-theme use-package ox-twbs)))
+    (elfeed virtualenvwrapper abl-mode ac-helm achievements activity-watch-mode annalist auto-auto-indent auto-complete auto-complete-chunk bash-completion better-defaults cheat-sh cheatsheet checkbox clean-buffers clocker confluence creds defrepeater demo-it org-beautify-theme org-clock-convenience org-clock-today org-dashboard org-doing org-drill org-drill-table org-ehtml org-jira org-journal-list org-kanban org-make-toc org-mru-clock org-msg org-multiple-keymap org-notebook org-password-manager org-pdfview org-plus-contrib org-pretty-tags org-projectile org-protocol-jekyll org-ql org-radiobutton org-random-todo org-recur org-review org-rich-yank org-seek org-sidebar org-super-agenda org-table-sticky-header org-tanglesync org-time-budgets ox-jira pandoc paradox pretty-hydra pretty-mode rainbow-blocks rainbow-identifiers reveal-in-osx-finder request org-gcal whole-line-or-region calfw-org calfw-cal org-journal monokai-theme use-package ox-twbs)))
  '(paradox-automatically-star t)
  '(pos-tip-background-color "#E6DB74")
  '(pos-tip-foreground-color "#242728")
