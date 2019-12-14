@@ -5,7 +5,7 @@
         ;; Movies
         ;; Reading list
 
-        ("t" "Todo" entry (file "~/org-files/inbox.org")
+        ("t" "Todo" entry (file "~/org-files/todo.org")
          "* TODO %?
   :PROPERTIES:
   :Location:
@@ -17,7 +17,7 @@
   :CLOCK:
   :END:" :empty-lines 1)
 
-        ("w" "Waiting" entry (file "~/org-files/inbox.org")
+        ("w" "Waiting" entry (file "~/org-files/todo.org")
          "* WAITING %?
   :PROPERTIES:
   :Location:
