@@ -9,13 +9,14 @@
 (package-initialize)
 
 ;; Proxies
-(load "~/.emacs.d/proxies")
+;;(load "~/.emacs.d/proxies")
 
 ;; Package repos
 ;; GnuELPA package archive is available by default in Emacs 24+
 (setq package-archives '(("gnu" . "https://elpa.gnu.org/packages/")
                          ("melpa" . "https://melpa.org/packages/")
-                         ("org" . "https://orgmode.org/elpa/")))
+                         ("org" . "https://orgmode.org/elpa/")
+                         ("marmalade" . "http://marmalade-repo.org/packages")))
 
 
 ;; Retrieve package list already available from
