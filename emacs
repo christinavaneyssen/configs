@@ -8,6 +8,8 @@
 ;; Activate all packages (in particular autoloads)
 (package-initialize)
 
+;; Proxies
+(load "~/.emacs.d/proxies")
 
 ;; Package repos
 ;; GnuELPA package archive is available by default in Emacs 24+
@@ -824,7 +826,8 @@
       ;;    (org-agenda-goto-calendar)))
       )
 
-(run-with-idle-timer 300 t 'jump-to-org-agenda)
+;; This is just annoying
+;;(run-with-idle-timer 300 t 'jump-to-org-agenda)
 
 ;; Refresh agenda automatically every 5 mins
     (defun kiwon/org-agenda-redo-in-other-window ()
