@@ -48,6 +48,9 @@
 (require 'use-package-ensure)
 (setq use-package-always-ensure t)
 
+(require 'cl-lib)
+(require 'subr-x)
+
 (use-package general)
 
 ;;(unless (package-installed-p 'use-package)
@@ -686,6 +689,14 @@
    "vt" #'org-sidebar-tree-toggle)
   :custom (org-sidebar-tree-side 'left))
 
+;; https://github.com/alphapapa/org-web-tools
+(use-package org-web-tools
+  :general
+  (alpha-org/general-def
+    "ilu" #'org-web-tools-link-for-url))
+
+
+;; Elfeed
 (global-set-key (kbd "C-x w") 'elfeed)
 
 
@@ -1012,6 +1023,7 @@
      ("#F309DF" . 85)
      ("#323342" . 100))))
  '(magit-diff-use-overlays nil)
+ '(org-sidebar-tree-side (quote left) t)
  '(package-selected-packages
    (quote
     (elfeed virtualenvwrapper abl-mode ac-helm achievements activity-watch-mode annalist auto-auto-indent auto-complete auto-complete-chunk bash-completion better-defaults cheat-sh cheatsheet checkbox clean-buffers clocker confluence creds defrepeater demo-it org-beautify-theme org-clock-convenience org-clock-today org-dashboard org-doing org-drill org-drill-table org-ehtml org-jira org-journal-list org-kanban org-make-toc org-mru-clock org-msg org-multiple-keymap org-notebook org-password-manager org-pdfview org-plus-contrib org-pretty-tags org-projectile org-protocol-jekyll org-ql org-radiobutton org-random-todo org-recur org-review org-rich-yank org-seek org-sidebar org-super-agenda org-table-sticky-header org-tanglesync org-time-budgets ox-jira pandoc paradox pretty-hydra pretty-mode rainbow-blocks rainbow-identifiers reveal-in-osx-finder request org-gcal whole-line-or-region calfw-org calfw-cal org-journal monokai-theme use-package ox-twbs)))
