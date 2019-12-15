@@ -48,6 +48,7 @@
 (require 'use-package-ensure)
 (setq use-package-always-ensure t)
 
+(use-package general)
 
 ;;(unless (package-installed-p 'use-package)
 ;;  (package-refresh-contents)
@@ -62,7 +63,7 @@
 ;; Allows Emacsclient and org-protol to run
 (server-start)
 
-(require 'virtualenvwrapper)
+(use-package virtualenvwrapper)
 (venv-initialize-interactive-shells) ;; if you want interactive shell support
 (venv-initialize-eshell) ;; if you want eshell support
 (setq venv-location "~/.envs/")
