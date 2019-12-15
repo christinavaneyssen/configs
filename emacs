@@ -696,6 +696,10 @@
     "ilu" #'org-web-tools-link-for-url))
 
 
+(use-package org-sticky-header
+  :hook (org-mode . org-sticky-header-mode))
+
+
 ;; Elfeed
 (global-set-key (kbd "C-x w") 'elfeed)
 
@@ -772,7 +776,7 @@
     (add-hook 'org-mode-hook (lambda () (org-bullets-mode 1))))
  :config
   (org-load-modules-maybe t)
- (eval-after-load 'org-indent '(diminish 'org-indent-mode))
+(eval-after-load 'org-indent '(diminish 'org-indent-mode))
 
 
 (defun org-buffer-todo ()
