@@ -728,6 +728,14 @@
 ;; https://github.com/alphapapa/org-now
 (require 'org-now)
 
+;; https://github.com/alphapapa/org-clock-convenience
+(use-package org-clock-convenience
+  :bind (:map org-agenda-mode-map
+        ("<S-up>" . org-clock-convenience-timestamp-up)
+        ("<S-down>" . org-clock-convenience-timestamp-down)
+        ("ö" . org-clock-convenience-fill-gap)
+        ("é" . org-clock-convenience-fill-gap-both)))
+
 
 ;; Elfeed
 (global-set-key (kbd "C-x w") 'elfeed)
