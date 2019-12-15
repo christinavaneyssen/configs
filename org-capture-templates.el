@@ -128,10 +128,9 @@
 ;;  :END:
 ;;  %:initial" :empty-lines 1)
 
-        ("w" "Web site" entry
-         (file "~/org-files/inbox.org")
-         "* %a :website:\n\n%U %?\n\n%:initial")
-
+	("w" "Web site" entry
+	  (file "")
+	  "* %a :website:\n\n%U %?\n\n%:initial")
         ))
 
 (defun my/org-capture-during-meeting (task)
