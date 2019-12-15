@@ -699,6 +699,26 @@
 (use-package org-sticky-header
   :hook (org-mode . org-sticky-header-mode))
 
+;; https://github.com/alphapapa/org-recent-headings
+(use-package org-recent-headings
+  :general
+  (alpha-org/general-def
+    "hr" #'org-recent-headings-helm)
+  :config
+  (org-recent-headings-mode)
+  :custom
+  (org-recent-headings-reverse-paths t)
+  (org-recent-headings-candidate-number-limit 100))
+
+(use-package helm-org
+  :general
+  (alpha-org/general-def
+    "ha" #'helm-org-agenda-files-headings
+    "hb" #'helm-org-in-buffer-headings
+    "hp" #'helm-org-parent-headings)
+  :custom
+  (helm-org-format-outline-path t))
+
 
 ;; Elfeed
 (global-set-key (kbd "C-x w") 'elfeed)
@@ -1015,6 +1035,7 @@
    (quote
     ("e6d29075a0e4b95de11d2c7b61b1214ef9cb6901157b7e0e0bd8704d502c8c3f" default)))
  '(fci-rule-color "#323342")
+ '(helm-org-format-outline-path t t)
  '(highlight-changes-colors (quote ("#ff8eff" "#ab7eff")))
  '(highlight-tail-colors
    (quote
@@ -1027,6 +1048,8 @@
      ("#F309DF" . 85)
      ("#323342" . 100))))
  '(magit-diff-use-overlays nil)
+ '(org-recent-headings-candidate-number-limit 100 t)
+ '(org-recent-headings-reverse-paths t t)
  '(org-sidebar-tree-side (quote left) t)
  '(package-selected-packages
    (quote
