@@ -11,6 +11,8 @@
 ;; Proxies
 ;;(load "~/.emacs.d/proxies")
 
+(add-to-list 'load-path "~/.emacs.d/local/")
+
 ;; Package repos
 ;; GnuELPA package archive is available by default in Emacs 24+
 (setq package-archives '(("gnu" . "https://elpa.gnu.org/packages/")
@@ -50,6 +52,7 @@
 
 (require 'cl-lib)
 (require 'subr-x)
+(require 'dash)
 
 (use-package general)
 
@@ -718,6 +721,10 @@
     "hp" #'helm-org-parent-headings)
   :custom
   (helm-org-format-outline-path t))
+
+
+;; https://github.com/alphapapa/org-now
+(require 'org-now)
 
 
 ;; Elfeed
