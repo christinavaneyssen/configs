@@ -678,6 +678,13 @@
 
 (load "~/.emacs.d/org-mode-config/org-capture-templates")
 
+;; https://github.com/alphapapa/org-sidebar
+(use-package org-sidebar
+  :general
+  (alpha-org/general-def
+   "vs" #'org-sidebar-toggle
+   "vt" #'org-sidebar-tree-toggle)
+  :custom (org-sidebar-tree-side 'left))
 
 (global-set-key (kbd "C-x w") 'elfeed)
 
