@@ -698,6 +698,8 @@
   (alpha-org/general-def
     "ilu" #'org-web-tools-link-for-url))
 
+(require 'org-protocol-capture-html)
+(require 's)
 
 (use-package org-sticky-header
   :hook (org-mode . org-sticky-header-mode))
