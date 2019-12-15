@@ -736,6 +736,10 @@
         ("ö" . org-clock-convenience-fill-gap)
         ("é" . org-clock-convenience-fill-gap-both)))
 
+;; https://github.com/alphapapa/org-recur
+(use-package org-recur
+  :demand t)
+
 
 ;; Elfeed
 (global-set-key (kbd "C-x w") 'elfeed)
