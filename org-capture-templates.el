@@ -107,7 +107,13 @@
 	  "* %a :website:\n\n%U %?\n\n%:initial")
         ))
 
-(setq org-journal-file-type 'monthly)
+(setq
+    org-journal-file-type 'monthly
+    org-journal-enable-encryption t
+    org-journal-encrypt-journal t
+    org-journal-enable-agenda-integration t
+    org-journal-new-schedule-entry t
+)
 (defun org-journal-find-location ()
   ;; Open today's journal, but specify a non-nil prefix argument in order to
   ;; inhibit inserting the heading; org-capture will insert the heading.
