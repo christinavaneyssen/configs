@@ -609,7 +609,8 @@
          ("C-c a" . org-agenda)
          ("C-c c" . org-capture)
          ("C-c C-x C-j" . org-clock-goto))
-   :config
+   ;;:config
+   )
 
    (org-babel-do-load-languages
         'org-babel-load-languages
@@ -625,7 +626,7 @@
     :config
     (setq
      org-journal-dir "~/org-files/journal/"
-     org-journal-file-format "%Y%m%d.org")))
+     org-journal-file-format "%Y%m%d.org"))
 
   (require 'org-protocol)
   (require 'org-inlinetask)
@@ -670,7 +671,7 @@
    org-enforce-todo-dependencies t
    org-log-done 'time
    org-log-redeadline 'time
-   org-log-reschedule 'time
+   org-log-reschedule 'time)
 ;;   org-capture-templates
 ;;   '(("t" "Task" entry (file "~/org-files/inbox.org")
 ;;      "* TODO %?\n  %U")
@@ -680,7 +681,7 @@
 ;;      "* Meeting about %?\n  %T\n** Attended:\n" :clock-in t :clock-keep t :jump-to-captured t :empty-lines 1 :tree-type week)
 ;;     ("j" "Journal" entry (file+olp+datetree "~/org-files/journal.org")
 ;;      "* %?\n"))
-)
+;;)
 
 (load "~/.emacs.d/org-mode-config/org-capture-templates")
 
