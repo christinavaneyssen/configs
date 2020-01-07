@@ -858,7 +858,7 @@
 
 ;; Specify global tags with fast tag selection
 (setq org-tag-alist '((:startgroup . nil) ("work" . ?w) ("personal" . ?p) (:endgroup . nil)
-                      ("computer" . ?c) ("reading" . ?r) ("grocery" . ?g) ("homework" . ?w) ("research" . ?r)))
+                      ("crypt" . ?c) ("reading" . ?r) ("research" . ?R)))
 
 (add-hook 'org-agenda-finalize-hook (lambda () (delete-other-windows)))
 (use-package org-bullets
