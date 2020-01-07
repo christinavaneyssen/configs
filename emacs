@@ -53,6 +53,8 @@
 (require 'cl-lib)
 (require 'subr-x)
 (require 'dash)
+(require 'epa-file)
+(epa-file-enable)
 
 (use-package general)
 
@@ -608,9 +610,24 @@
   :bind (("C-c l" . org-store-link)
          ("C-c a" . org-agenda)
          ("C-c c" . org-capture)
+         ("C-c d" . org-decrypt-entry)
          ("C-c C-x C-j" . org-clock-goto))
-   ;;:config
-   )
+  :requires org-crypt
+)
+
+(setq org-tags-exclude-from-inheritance '("crypt"))
+(setq org-crypt-key "769BFE40DA64FC9578757A1A9FFD8DB48CF9DF9F")
+(setq auto-save-default nil)
+
+;;(Use-package org-crypt
+;;  :init (org-crypt-use-before-save-magic)
+;;  :custom
+;;  (org-tags-exclude-from-inheritance '("crypt"))
+;;  (org-crypt-key "769BFE40DA64FC9578757A1A9FFD8DB48CF9DF9F")
+;;    ;; GPG key to use for encryption
+;;    ;; Either the Key ID or set to nil to use symmetric encryption.
+;;  (auto-save-default nil))
+
 
    (org-babel-do-load-languages
         'org-babel-load-languages
