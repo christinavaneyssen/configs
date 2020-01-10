@@ -48,7 +48,7 @@
   %^T--%^T" :empty-lines 1)
 
         ("j" "Journal" entry (function org-journal-find-location)
-         "* %(format-time-string org-journal-time-format)%^{Title}\n%i%?")
+         "* %(format-time-string org-journal-time-format)\n%i%?")
 
 ;;        ("j" "Journal" entry (file+olp+datetree "~/org-files/journal.org")
 ;;         "* Journal :org:
