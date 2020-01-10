@@ -695,18 +695,6 @@
    org-use-property-inheritance t
 )
 
-;; capture templates in their own file now
-;;   org-capture-templates
-;;   '(("t" "Task" entry (file "~/org-files/inbox.org")
-;;      "* TODO %?\n  %U")
-;;     ("a" "Appointment" entry (file "~/org-files/gcal.org")
-;;      "* %?\n\n%^T\n\n:PROPERTIES:\n\n:END:\n\n")
-;;     ("m" "Meeting" entry (file+olp+datetree "~/org-files/meetings.org")
-;;      "* Meeting about %?\n  %T\n** Attended:\n" :clock-in t :clock-keep t :jump-to-captured t :empty-lines 1 :tree-type week)
-;;     ("j" "Journal" entry (file+olp+datetree "~/org-files/journal.org")
-;;      "* %?\n"))
-;;)
-
 
 ;; TODO -> DONE once all subtasks completed
 (defun org-summary-todo (n-done n-not-done)
