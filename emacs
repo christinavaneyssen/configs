@@ -690,7 +690,11 @@
    org-enforce-todo-dependencies t
    org-log-done 'time
    org-log-redeadline 'time
-   org-log-reschedule 'time)
+   org-log-reschedule 'time
+   org-use-property-inheritance t
+)
+
+;; capture templates in their own file now
 ;;   org-capture-templates
 ;;   '(("t" "Task" entry (file "~/org-files/inbox.org")
 ;;      "* TODO %?\n  %U")
