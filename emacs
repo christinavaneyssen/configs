@@ -44,6 +44,8 @@
 ;; Paradox github stars
 (setq paradox-github-token "257bc04184e4f02a375aa3f91cb430b7ea9154b1")
 
+(setq custom-file (concat user-emacs-directory "/custom.el"))
+
 
 ;; Ensure packages are install automatically if not already present
 ;; When set to t, there is no need to specify :ensure t
