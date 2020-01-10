@@ -657,7 +657,8 @@
 
   (add-to-list 'org-modules 'org-habit)
   (add-to-list 'org-global-properties
-               '("Effort_ALL". "0:05 0:15 0:30 1:00 2:00 3:00 4:00"))
+               '("Effort_ALL". "0:15 0:30 0:45 1:00 2:00 3:00 4:00 5:00 6:00 0:00")
+               '("STYLE_ALL". "habit"))
   (setq org-modules
         '(org-habit org-w3m org-bbdb org-bibtex org-docview org-gnus org-info org-irc org-mhe org-rmail)
         org-habit-graph-column 105)
