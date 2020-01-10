@@ -609,13 +609,15 @@
 
 ;;;;Org mode configuration
 (use-package org
-  :bind (("C-c l" . org-store-link)
-         ("C-c a" . org-agenda)
-         ("C-c c" . org-capture)
-         ("C-c d" . org-decrypt-entry)
+  :bind (("C-c d" . org-decrypt-entry)
          ("C-c C-x C-j" . org-clock-goto))
   :requires org-crypt
 )
+
+(global-set-key (kbd "C-c l") 'org-store-link)
+(global-set-key (kbd "C-c a") 'org-agenda)
+(global-set-key (kbd "C-c c") 'org-capture)
+
 
 (setq org-tags-exclude-from-inheritance '("crypt"))
 (setq org-crypt-key "769BFE40DA64FC9578757A1A9FFD8DB48CF9DF9F")
