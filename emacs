@@ -638,37 +638,37 @@
 ;;  (auto-save-default nil))
 
 
-   (org-babel-do-load-languages
-        'org-babel-load-languages
-         '((python . t)))
+(org-babel-do-load-languages
+    'org-babel-load-languages
+     '((python . t)))
 
-  (defun org-insert-inactive-time-stamp ()
-    "Insert an inactive time stamp."
-    (interactive)
-    (org-insert-time-stamp (current-time) t t))
-  (define-key org-mode-map (kbd "C-c .") 'org-insert-inactive-time-stamp)
+(defun org-insert-inactive-time-stamp ()
+"Insert an inactive time stamp."
+(interactive)
+(org-insert-time-stamp (current-time) t t))
+(define-key org-mode-map (kbd "C-c .") 'org-insert-inactive-time-stamp)
 
-  (use-package org-journal
-    :config
-    (setq
-     org-journal-dir "~/org-files/journal/"
-     org-journal-file-format "%Y%m%d.org"))
+(use-package org-journal
+:config
+(setq
+ org-journal-dir "~/org-files/journal/"
+ org-journal-file-format "%Y%m%d.org"))
 
-  (require 'org-protocol)
-  (require 'org-inlinetask)
-  (require 'org-tempo)
+(require 'org-protocol)
+(require 'org-inlinetask)
+(require 'org-tempo)
 
-  (setq org-todo-keywords
-         (quote ((sequence "TODO(t)" "NEXT(n)" "|" "DONE(d)")
-                 (sequence "WAITING(w@/!)" "HOLD(h@/!)" "|" "CANCELLED(c@/!)" "PHONE" "MEETING"))))
+(setq org-todo-keywords
+     (quote ((sequence "TODO(t)" "NEXT(n)" "|" "DONE(d)")
+             (sequence "WAITING(w@/!)" "HOLD(h@/!)" "|" "CANCELLED(c@/!)" "PHONE" "MEETING"))))
 
-  (add-to-list 'org-modules 'org-habit)
-  (add-to-list 'org-global-properties
-               '("Effort_ALL". "0:15 0:30 0:45 1:00 2:00 3:00 4:00 5:00 6:00 0:00")
-               '("STYLE_ALL". "habit"))
-  (setq org-modules
-        '(org-habit org-w3m org-bbdb org-bibtex org-docview org-gnus org-info org-irc org-mhe org-rmail)
-        org-habit-graph-column 105)
+(add-to-list 'org-modules 'org-habit)
+(add-to-list 'org-global-properties
+           '("Effort_ALL". "0:15 0:30 0:45 1:00 2:00 3:00 4:00 5:00 6:00 0:00")
+           '("STYLE_ALL". "habit"))
+(setq org-modules
+    '(org-habit org-w3m org-bbdb org-bibtex org-docview org-gnus org-info org-irc org-mhe org-rmail)
+    org-habit-graph-column 105)
 
   (setq
    org-agenda-tags-column -100 ;; screen width
@@ -929,30 +929,6 @@
 ;;		(org-entry-get-multivalued-property (point) "Effort"))))
 ;;	  (unless (equal effort "")
 ;;	    (org-set-property "Effort" effort)))))
-
-;; Show agenda view when emacs idle for 5 mins
-    (defun jump-to-org-agenda ()
-      (interactive)
-      (let ((buf (get-buffer "*Org Agenda*"))
-	    wind)
-	(if buf
-	    (if (setq wind (get-buffer-window buf))
-		(select-window wind)
-	      (if (called-interactively-p)
-		  (progn
-		    (select-window (display-buffer buf t t))
-		    (org-fit-window-to-buffer)
-		    ;; (org-agenda-redo)
-		    )
-		(with-selected-window (display-buffer buf)
-		  (org-fit-window-to-buffer)
-		  ;; (org-agenda-redo)
-		  )))
-	  (call-interactively 'org-agenda-list)))
-      ;;(let ((buf (get-buffer "*Calendar*")))
-      ;;  (unless (get-buffer-window buf)
-      ;;    (org-agenda-goto-calendar)))
-      )
 
 
 ;; Refresh agenda automatically every 5 mins
