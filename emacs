@@ -947,8 +947,6 @@
       ;;    (org-agenda-goto-calendar)))
       )
 
-;; This is just annoying
-;;(run-with-idle-timer 300 t 'jump-to-org-agenda)
 
 ;; Refresh agenda automatically every 5 mins
     (defun kiwon/org-agenda-redo-in-other-window ()
