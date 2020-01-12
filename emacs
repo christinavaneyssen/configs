@@ -12,6 +12,7 @@
 ;;(load "~/.emacs.d/proxies")
 
 (add-to-list 'load-path "~/.emacs.d/local/")
+(add-to-list 'default-frame-alist '(fullscreen . maximized))
 
 ;; Package repos
 ;; GnuELPA package archive is available by default in Emacs 24+
