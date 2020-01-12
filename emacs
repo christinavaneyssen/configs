@@ -624,6 +624,10 @@
 (setq org-crypt-key "769BFE40DA64FC9578757A1A9FFD8DB48CF9DF9F")
 (setq auto-save-default nil)
 
+(add-hook 'diary-list-entries-hook 'diary-sort-entries t)
+(add-hook 'diary-list-entries-hook 'diary-include-other-diary-files)
+(add-hook 'diary-mark-entries-hook 'diary-mark-included-diary-files)
+
 ;;(Use-package org-crypt
 ;;  :init (org-crypt-use-before-save-magic)
 ;;  :custom
@@ -672,6 +676,7 @@
    org-agenda-show-log t
    org-agenda-skip-scheduled-if-done t
    org-agenda-skip-deadline-if-done t
+   org-agenda-include-diary t
    ;; https://www.reddit.com/r/orgmode/comments/e4stk2/adding_a_separator_line_between_days_in_emacs/
    org-agenda-format-date (lambda (date) (concat "\n"
                                                     (make-string (window-width) 9472)
@@ -693,10 +698,11 @@
    org-agenda-span 'week
    org-enforce-todo-dependencies t
    org-log-done 'time
-   org-log-redeadline 'time
-   org-log-reschedule 'time
+   ;;org-log-redeadline 'time
+   ;;org-log-reschedule 'time
    org-use-property-inheritance t
 )
+
 
 
 ;; TODO -> DONE once all subtasks completed
