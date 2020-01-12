@@ -28,7 +28,7 @@
 
 
 ;; Required packages
-(setq package-list '(use-package smartparens request calfw calfw-org calfw-ical calfw-gcal zenburn))
+(setq package-list '(use-package smartparens request zenburn))
 
 
 ;; Install missing packages
@@ -1018,26 +1018,6 @@
 '(("c" "Simple agenda view"
 ((agenda "")
 (alltodo "")))))
-
-(use-package calfw
-    :config
-    (require 'calfw)
-    (require 'calfw-org)
-    (setq cfw:org-overwrite-default-keybinding t)
-    (require 'calfw-ical))
-
-(defun mycalendar ()
-    (interactive)
-    (cfw:open-calendar-buffer
-        :contents-sources
-    (list
-        (cfw:ical-create-source "gcal" "" "IndianRed")
-)))
-(setq cfw:org-overwrite-default-keybinding t)
-
-(use-package calfw-gcal
-    :config
-    (require 'calfw-gcal))
 
 
 ;; Keep in Touch
