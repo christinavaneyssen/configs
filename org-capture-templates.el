@@ -8,9 +8,6 @@
         ("t" "Todo" entry (file "~/org-files/todo.org")
          "* TODO %?
   :PROPERTIES:
-  :Location:
-  :Via:
-  :Note:
   :END:
   :LOGBOOK:
   :CREATED: %U
@@ -20,9 +17,6 @@
         ("w" "Waiting" entry (file "~/org-files/todo.org")
          "* WAITING %?
   :PROPERTIES:
-  :Location:
-  :Via:
-  :Note:
   :END:
   :LOGBOOK:
   :CREATED: %U
@@ -31,7 +25,6 @@
         ("m" "Meeting" entry (file "~/org-files/inbox.org")
          "* MEETING %^{description}
   :PROPERTIES:
-  :Attendees:
   :END:
   :LOGBOOK:
   :CREATED: %U
@@ -40,29 +33,15 @@
   Notes:
   %?" :clock-in t :clock-keep t :jump-to-captured t :empty-lines 1 :tree-type week)
 
-        ("a" "Appointment" entry (file "~/org-files/gcal.org")
-         "* %?
-  :PROPERTIES:
-  :Note:
-  :END:
-  %^T--%^T" :empty-lines 1)
+        ("a" "Appointment" entry (file  "~/org-files/gcal.org")
+         "* %?\n\n%^T\n\n:PROPERTIES:\n\n:END:" :empty-lines 1)
 
         ("j" "Journal" entry (function org-journal-find-location)
          "* %(format-time-string org-journal-time-format)\n%i%?")
 
-;;        ("j" "Journal" entry (file+olp+datetree "~/org-files/journal.org")
-;;         "* Journal :org:
-;;  :PROPERTIES:
-;;  :Note:
-;;  :END:
-;;  :CREATED: %U
-;;  %t\n\n  %?" :empty-lines 1)
-
         ("n" "Note" entry (file "~/org-files/notes.org")
          "* %? :note:
   :PROPERTIES:
-  :Via:
-  :Note:
   :END:
   :LOGBOOK:
   :CREATED: %U
@@ -72,8 +51,6 @@
          "* GIFT %?
   :PROPERTIES:
   :Link:
-  :Via:
-  :Note:
   :END:
   :LOGBOOK:
   :CREATED: %U
@@ -84,7 +61,6 @@
   :PROPERTIES:
   :Location:
   :Type:
-  :Via:
   :Note:
   :END:
   :LOGBOOK:
@@ -95,8 +71,6 @@
         ("c" "Code Project" entry (file "~/org-files/tech-notebook.org")
          "* IDEA %?
   :PROPERTIES:
-  :Via:
-  :Note:
   :END:
   :LOGBOOK:
   :CREATED: %U
