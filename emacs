@@ -624,6 +624,11 @@
 (setq org-crypt-key "769BFE40DA64FC9578757A1A9FFD8DB48CF9DF9F")
 (setq auto-save-default nil)
 
+(setq view-diary-entries-initially t
+   mark-diary-entries-in-calendar t
+   number-of-diary-entries 7)
+(add-hook 'diary-display-hook 'fancy-diary-display)
+(add-hook 'today-visible-calendar-hook 'calendar-mark-today)
 (add-hook 'diary-list-entries-hook 'diary-sort-entries t)
 (add-hook 'diary-list-entries-hook 'diary-include-other-diary-files)
 (add-hook 'diary-mark-entries-hook 'diary-mark-included-diary-files)
@@ -702,8 +707,6 @@
    ;;org-log-reschedule 'time
    org-use-property-inheritance t
 )
-
-
 
 ;; TODO -> DONE once all subtasks completed
 (defun org-summary-todo (n-done n-not-done)
@@ -943,16 +946,6 @@
 ;; Make Org mode work with files ending in .org
 (add-to-list 'auto-mode-alist '("\\.org$" . org-mode))
 
-;; GCal Set Up
-(setq package-check-signature nil)
-
-(use-package org-gcal
-    :config
-    (setq org-gcal-client-id ""
-    org-gcal-client-secret ""))
-
-(add-hook 'org-agenda-mode-hook (lambda () (org-gcal-sync) ))
-(add-hook 'org-capture-after-finalize-hook (lambda () (org-gcal-sync) ))
 
 ;; Open agenda in full screen
 (defun open-agenda ()
