@@ -619,6 +619,18 @@
 (global-set-key (kbd "C-c a") 'org-agenda)
 (global-set-key (kbd "C-c c") 'org-capture)
 
+(setq org-directory "~/org-files")
+(setq org-default-notes-file (concat org-directory "/refile.org"))
+
+;; Remove empty LOGBOOK drawers on clock out
+;;(defun bh/remove-empty-drawer-on-clock-out ()
+;;  (interactive)
+;;  (save-excursion
+;;    (beginning-of-line 0)
+;;    (org-remove-empty-drawer-at "LOGBOOK" (point))))
+;;
+;;(add-hook 'org-clock-out-hook 'bh/remove-empty-drawer-on-clock-out 'append)
+
 
 (setq org-tags-exclude-from-inheritance '("crypt"))
 (setq org-crypt-key "769BFE40DA64FC9578757A1A9FFD8DB48CF9DF9F")
@@ -693,7 +705,9 @@
         "...." "----------------")
    org-columns-default-format "%14SCHEDULED %Effort{:} %1PRIORITY %TODO %50ITEM %TAGS"
    org-agenda-files '("~/org-files")
-   org-refile-targets '((("~/org-files/work.org" "~/org-files/personal.org" "~/org-files/todo.org") :maxlevel . 1))
+;;   org-refile-targets '((("~/org-files/work.org" "~/org-files/personal.org" "~/org-files/todo.org") :maxlevel . 1))
+   ; Targets include this file and any file contributing to the agenda - up to 9 levels deep
+   org-refile-targets (quote ((nil :maxlevel . 9) (org-agenda-files :maxlevel . 9)))
    org-deadline-warning-days 14
    org-default-notes-file "~/org-files/todo.org"
    org-reverse-note-order t
@@ -707,6 +721,34 @@
    ;;org-log-reschedule 'time
    org-use-property-inheritance t
 )
+
+; Use full outline paths for refile targets - we file directly with IDO
+(setq org-refile-use-outline-path t)
+
+; Targets complete directly with IDO
+(setq org-outline-path-complete-in-steps nil)
+
+; Allow refile to create parent tasks with confirmation
+(setq org-refile-allow-creating-parent-nodes (quote confirm))
+
+; Use IDO for both buffer and file completion and ido-everywhere to t
+(setq org-completion-use-ido t)
+(setq ido-everywhere t)
+(setq ido-max-directory-size 100000)
+(ido-mode (quote both))
+; Use the current window when visiting files and buffers with ido
+(setq ido-default-file-method 'selected-window)
+(setq ido-default-buffer-method 'selected-window)
+; Use the current window for indirect buffer display
+(setq org-indirect-buffer-display 'current-window)
+
+;;;; Refile settings
+; Exclude DONE state tasks from refile targets
+(defun bh/verify-refile-target ()
+  "Exclude todo keywords with a done state from refile targets"
+  (not (member (nth 2 (org-heading-components)) org-done-keywords)))
+
+(setq org-refile-target-verify-function 'bh/verify-refile-target)
 
 ;; TODO -> DONE once all subtasks completed
 (defun org-summary-todo (n-done n-not-done)
