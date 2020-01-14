@@ -622,16 +622,6 @@
 (setq org-directory "~/org-files")
 (setq org-default-notes-file (concat org-directory "/refile.org"))
 
-;; Remove empty LOGBOOK drawers on clock out
-;;(defun bh/remove-empty-drawer-on-clock-out ()
-;;  (interactive)
-;;  (save-excursion
-;;    (beginning-of-line 0)
-;;    (org-remove-empty-drawer-at "LOGBOOK" (point))))
-;;
-;;(add-hook 'org-clock-out-hook 'bh/remove-empty-drawer-on-clock-out 'append)
-
-
 (setq org-tags-exclude-from-inheritance '("crypt"))
 (setq org-crypt-key "769BFE40DA64FC9578757A1A9FFD8DB48CF9DF9F")
 (setq auto-save-default nil)
