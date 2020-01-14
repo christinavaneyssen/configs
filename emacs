@@ -623,7 +623,7 @@
 (setq org-default-notes-file (concat org-directory "/refile.org"))
 
 (setq org-tags-exclude-from-inheritance '("crypt"))
-(setq org-crypt-key "769BFE40DA64FC9578757A1A9FFD8DB48CF9DF9F")
+(setq org-crypt-key "")
 (setq auto-save-default nil)
 
 (setq view-diary-entries-initially t
