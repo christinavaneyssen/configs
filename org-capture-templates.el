@@ -5,16 +5,19 @@
         ;; Movies
         ;; Reading list
 
-        ("t" "Todo" entry (file "~/org-files/todo.org")
+        ("t" "Todo" entry (file "~/org-files/refile.org")
          "* TODO %?
   :PROPERTIES:
   :END:
   :LOGBOOK:
   :CREATED: %U
   :CLOCK:
-  :END:" :empty-lines 1)
+  :END:" :clock-in t :clock-resume t :empty-lines 1)
 
-        ("w" "Waiting" entry (file "~/org-files/todo.org")
+        ("r" "Respond" entry (file "~/git/org/refile.org")
+         "* NEXT Respond to %? on \nSCHEDULED: %t\n%U\n%a\n" :clock-in t :clock-resume t :immediate-finish t)
+
+        ("w" "Waiting" entry (file "~/org-files/refile.org")
          "* WAITING %?
   :PROPERTIES:
   :END:
@@ -22,7 +25,7 @@
   :CREATED: %U
   :END:" :empty-lines 1)
 
-        ("m" "Meeting" entry (file "~/org-files/inbox.org")
+        ("m" "Meeting" entry (file "~/org-files/refile.org")
          "* MEETING %^{description}
   :PROPERTIES:
   :END:
@@ -39,7 +42,7 @@
         ("j" "Journal" entry (function org-journal-find-location)
          "* %(format-time-string org-journal-time-format)\n%i%?")
 
-        ("n" "Note" entry (file "~/org-files/notes.org")
+        ("n" "Note" entry (file "~/org-files/refile.org")
          "* %? :note:
   :PROPERTIES:
   :END:
@@ -47,7 +50,7 @@
   :CREATED: %U
   :END:" :empty-lines 1)
 
-        ("g" "Gift" entry (file "~/org-files/gifts.org")
+        ("g" "Gift" entry (file "~/org-files/refile.org")
          "* GIFT %?
   :PROPERTIES:
   :Link:
@@ -56,7 +59,7 @@
   :CREATED: %U
   :END:" :empty-lines 1)
 
-        ("v" "Visit/Outings" entry (file "~/org-files/outings.org")
+        ("v" "Visit/Outings" entry (file "~/org-files/refile.org")
          "* VISIT %?
   :PROPERTIES:
   :Location:
@@ -68,7 +71,7 @@
   :END:
   %^t--%^t" :empty-lines 1)
 
-        ("c" "Code Project" entry (file "~/org-files/tech-notebook.org")
+        ("c" "Code Project" entry (file "~/org-files/refile.org")
          "* IDEA %?
   :PROPERTIES:
   :END:
